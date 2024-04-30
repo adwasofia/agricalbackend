@@ -28,19 +28,37 @@ export async function getAccuWeatherConditionHourly() {
     try {
         const fetchedData = await fetchData();
         // Use the fetched data here
-        console.log(fetchedData[0]);
+        // console.log(fetchedData[0]);
+        const datetime = fetchedData[0].DateTime;
+        const epochdatetime = fetchedData[0].EpochDateTime;
+        const weathericon = fetchedData[0].WeatherIcon;
+        const iconphrase = fetchedData[0].IconPhrase;
+        const hasprecipitation = fetchedData[0].HasPrecipitation;
+        const precipitationtype = (fetchedData[0].PrecipitationType || 'N/A');
+        const precipitationintensity = (fetchedData[0].PrecipitationIntensiti || 'N/A');
+        const isdaylight = fetchedData[0].IsDaylight;
+        const temperaturevalue = fetchedData[0].Temperature.Value;
+        const temperatureunit = fetchedData[0].Temperature.Unit;
+        const temperatureunittype = fetchedData[0].Temperature.UnitType;
+        const precipitationprobability = fetchedData[0].PrecipitationProbability;
+        // console.log(precipitationintensity);
+        createWeatherCondition(datetime, epochdatetime, weathericon, iconphrase, hasprecipitation, precipitationtype, precipitationintensity, isdaylight, temperaturevalue, temperatureunit, temperatureunittype, precipitationprobability);
     } catch (error) {
         console.error(error);
     }
 };
 
-// export async function createWeatherCondition(fetchedData[0].DateTime, fetchedData[0].EpochDateTime, fetchedData[0].WeatherIcon, fetchedData[0].IconPhrase, fetchedData[0].HasPrecipitation, fetchedData[0].PrecipitationType, fetchedData[0].PrecipitationIntensity, fetchedData[0].IsDaylight, fetchedData[0].Temperature.Value, fetchedData[0].Temperature.Unit, fetchedData[0].Temperature.UnitType, fetchedData[0].PrecipitationProbability) {
-//     const [result] = await pool.query(`
-//     INSERT INTO notes (datetime, epochdatetime, weathericon, iconphrase, hasprecipitation, precipitationtype, precipitationintensity, isdaylight, temperaturevalue, temperatureunit, temperatureunittype, precipitationprobability)
-//     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-//     `, [fetchedData[0].DateTime, fetchedData[0].EpochDateTime, fetchedData[0].WeatherIcon, fetchedData[0].IconPhrase, fetchedData[0].HasPrecipitation, fetchedData[0].PrecipitationType, fetchedData[0].PrecipitationIntensity, fetchedData[0].IsDaylight, fetchedData[0].Temperature.Value, fetchedData[0].Temperature.Unit, fetchedData[0].Temperature.UnitType, fetchedData[0].PrecipitationProbability])
-//     return result
-// }
+export async function createWeatherCondition(datetime, epochdatetime, weathericon, iconphrase, hasprecipitation, precipitationtype, precipitationintensity, isdaylight, temperaturevalue, temperatureunit, temperatureunittype, precipitationprobability) {
+    const [result] = await pool.query(`
+    INSERT INTO accuweathercondition (datetime, epochdatetime, weathericon, iconphrase, hasprecipitation, precipitationtype, precipitationintensity, isdaylight, temperaturevalue, temperatureunit, temperatureunittype, precipitationprobability)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [datetime, epochdatetime, weathericon, iconphrase, hasprecipitation, precipitationtype, precipitationintensity, isdaylight, temperaturevalue, temperatureunit, temperatureunittype, precipitationprobability])
+    return result
+}
+
+// INSERT INTO WeatherForecast 
+//   (DateTime, EpochDateTime, WeatherIcon, IconPhrase, HasPrecipitation, PrecipitationType, PrecipitationIntensity, IsDaylight, TemperatureValue, TemperatureUnit, TemperatureUnitType, PrecipitationProbability, MobileLink, Link)
+//   VALUES (?, ?, ?, ?, ?, IFNULL(?, 'N/A'), IFNULL(?, 'N/A'), ?, ?, ?, ?, ?, ?, ?)
 
 // (async () => {
 //     try {
@@ -54,7 +72,8 @@ export async function getAccuWeatherConditionHourly() {
 
 
 // const weatherCondition = await getWeatherCondition(3)
-console.log(getAccuWeatherConditionHourly())
+console.log(getAccuWeatherConditionHourly());
+// console.log(precipitationintensity);
 
 // const notes = await getAllWeatherCondition()
 // console.log(weatherConditions)
