@@ -10,7 +10,7 @@ const pool = mysql.createPool({
   database: process.env.MYSQL_DATABASE
 }).promise()
 
-const apiKey = 'cjdwhSmpFwTfPAEV3CRKj8PNWD8VJHGc';
+const apiKey = process.env.AccuWeatherAPIkey;
 const apiUrl = 'http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/3454195';
 
 // Append the API key as a query parameter to the URL
