@@ -7,10 +7,10 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.9.7",
     "node-fetch": "^2.7.0",
-    "pg": "^8.11.5"
+    "pg": "^8.11.5",
+    "sequelize": "^6.37.3"
   },
   "name": "agricalbackend",
-  "type": "module",
   "description": "Hello World repository for Git tutorial\r This is an example repository for the Git tutoial on https://www.w3schools.com",
   "version": "1.0.0",
   "main": "index.js",
