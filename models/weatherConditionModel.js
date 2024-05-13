@@ -3,14 +3,11 @@ const { db } = require("../config/database");
 
 const { DataTypes } = Sequelize;
 
-const WeatherCondition = db.define('weathercondition', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
+const WeatherCondition = db.define('AccuWeatherCondition', {
     dateTime: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        primaryKey: true
     },
     epochDateTime: {
         type: DataTypes.INTEGER
@@ -46,7 +43,8 @@ const WeatherCondition = db.define('weathercondition', {
         type: DataTypes.INTEGER
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false
 });
 
 module.exports = { WeatherCondition };
