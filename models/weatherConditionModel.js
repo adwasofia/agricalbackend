@@ -3,7 +3,7 @@ const { db } = require("../config/database");
 
 const { DataTypes } = Sequelize;
 
-const WeatherCondition = db.define('AccuWeatherCondition', {
+const WeatherCondition = db.define('accuweathercondition', {
     dateTime: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -27,7 +27,7 @@ const WeatherCondition = db.define('AccuWeatherCondition', {
     precipitationIntensity: {
         type: DataTypes.STRING
     },
-    isDayLight: {
+    isDaylight: {
         type: DataTypes.BOOLEAN
     },
     temperatureValue: {

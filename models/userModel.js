@@ -20,6 +20,9 @@ const Users = db.define('users', {
     password: {
         type: DataTypes.STRING
     },
+    punyaAlat: {
+        type: DataTypes.BOOLEAN
+    },
     refresh_token: {
         type: DataTypes.STRING
     }

@@ -11,4 +11,23 @@ const getAllLokasiLahan = async (req, res) => {
     }
 };
 
-module.exports = { getAllLokasiLahan };
+const getAllLocationKey = async () => {
+    try {
+        const locations = await LokasiLahan.findAll({
+            attributes: ['locationkey']
+        });
+        return locations;
+    } catch (error) {
+        console.error('Error fetching location keys:', error);
+        throw error;
+    }
+};
+
+// const addLokasiLahan = async (req, res) => {
+//     const { lokasi } = req.body;
+//     try {
+//         const lokasilahan = await LokasiLahan
+//     }
+// };
+
+module.exports = { getAllLokasiLahan, getAllLocationKey };

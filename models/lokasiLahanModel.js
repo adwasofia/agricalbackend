@@ -11,6 +11,9 @@ const LokasiLahan = db.define('lokasilahan', {
     },
     lokasi: {
         type: DataTypes.STRING
+    },
+    locationkey: {
+        type: DataTypes.INTEGER
     }
 }, {
     freezeTableName: true
