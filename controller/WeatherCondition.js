@@ -52,7 +52,7 @@ const insertOneHourlyWeatherCondition = async (locationKey) => {
 
         const weathercondition = await WeatherCondition.create({ 
             dateTime: new Date(fetchedData[0].DateTime),
-            epochDateTime: fetchedData[0].EpochDateTime,
+            locationKey: locationKey,
             weatherIcon: fetchedData[0].WeatherIcon,
             iconPhrase: fetchedData[0].IconPhrase,
             hasPrecipitation: fetchedData[0].HasPrecipitation,
@@ -75,7 +75,7 @@ const insertOneHourlyWeatherCondition = async (locationKey) => {
 
 const insertTwelveHourlyWeatherCondition = async (locationKey) => {
     try {
-        //const locationKey = 3454195;
+        const locationKey = 3454195;
         const fetchedData = await fetchTwelveHourlyData(locationKey);
 
         const transformedData = fetchedData.map(data => ({

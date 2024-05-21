@@ -9,7 +9,7 @@ const WeatherCondition = db.define('accuweathercondition', {
         defaultValue: DataTypes.NOW,
         primaryKey: true
     },
-    epochDateTime: {
+    locationKey: {
         type: DataTypes.INTEGER
     },
     weatherIcon: {
