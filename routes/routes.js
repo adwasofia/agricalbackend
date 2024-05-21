@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const { getUsers, register, login } = require('../controller/Users');
-const { getAllLokasiLahan, getAllLocationKey } = require('../controller/LokasiLahan');
+const { getAllLokasiLahan, getAllLocationKey, getOneLocationKey } = require('../controller/LokasiLahan');
 const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast } = require('../controller/WeatherCondition'); 
 const { getAllKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
@@ -23,8 +23,10 @@ router.get('/protected', authenticateJWT, (req, res) => {
 router.get('/users', getUsers);
 router.post('/register', register);
 router.post('/login', login);
-// router.put('/edit', upload.none(), editUser);
-// router.delete('/delete', deleteUser);
+
+// Route untuk Dropdown Lokasi Kecamatan
+router.get('/getalllokasilahan', getAllLokasiLahan);
+router.post('/getonelocationkey', getOneLocationKey);
 
 // Route untuk weathercondition ()
 router.get('/allweathercondition', getAllWeatherCondition);

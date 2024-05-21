@@ -16,7 +16,8 @@ const LokasiLahan = db.define('lokasilahan', {
         type: DataTypes.INTEGER
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false
 });
 
 module.exports = { LokasiLahan };

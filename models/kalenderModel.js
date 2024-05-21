@@ -19,7 +19,8 @@ const Kalender = db.define('kalender', {
         type: DataTypes.STRING
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false
 });
 
 module.exports = { Kalender };

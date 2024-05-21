@@ -18,7 +18,8 @@ const StatusIrigasi = db.define('statusirigasi', {
         type: DataTypes.BOOLEAN
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false
 });
 
 module.exports = { StatusIrigasi };
