@@ -31,13 +31,13 @@ const getLatestWeatherCondition = async (req, res) => {
         month = months[weathercondition.dateTime.getMonth()];
         year = weathercondition.dateTime.getFullYear();
 
-        const latestweathercondition = {
+        const latestweathercondition = {data: [{
             dateInfo: (`${day}, ${date} ${month} ${year}`),
             time: (`${weathercondition.dateTime.getHours()}.00`),
             weatherIcon: weathercondition.weatherIcon,
             iconPhrase: weathercondition.iconPhrase,
-            temperature: Math.round((weathercondition.temperatureValue - 32) * 5 / 9)
-        }
+            temperature: (`${Math.round((weathercondition.temperatureValue - 32) * 5 / 9)}°C`)
+        }]}
 
         res.json(latestweathercondition);
     } catch (error) {

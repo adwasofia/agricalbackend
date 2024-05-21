@@ -30,7 +30,8 @@ const Users = db.define('users', {
         type: DataTypes.STRING
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false
 });
 
 module.exports = { Users };

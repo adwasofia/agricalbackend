@@ -22,7 +22,7 @@ router.get('/protected', authenticateJWT, (req, res) => {
 });
 router.get('/users', getUsers);
 router.post('/register', register);
-router.post('/login', upload.none(), login);
+router.post('/login', login);
 // router.put('/edit', upload.none(), editUser);
 // router.delete('/delete', deleteUser);
 
