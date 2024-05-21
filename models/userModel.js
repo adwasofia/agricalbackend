@@ -23,7 +23,10 @@ const Users = db.define('users', {
     punyaAlat: {
         type: DataTypes.BOOLEAN
     },
-    refresh_token: {
+    lokasiLahan: {
+        type: DataTypes.STRING
+    },
+    refreshToken: {
         type: DataTypes.STRING
     }
 }, {

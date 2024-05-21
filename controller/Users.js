@@ -13,63 +13,105 @@ const getUsers = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
-const Register = async (req, res) => {
-    const { firstName, lastName, username, email, password } = req.body;
+// app.post('/register', async (req, res) => {
+//     const { firstName, lastName, username, email, password } = req.body;
+//     const salt = await bcrypt.genSalt();
+//     const hashPass = await bcrypt.hash(password, salt);
+//     users.push({ username, password: hashedPassword });
+//     res.status(201).json({ message: 'User registered successfully' });
+// });
+
+const register = async (req, res) => {
+    const { firstName, lastName, username, email, password, punyaAlat, lokasiLahan } = req.body;
     const salt = await bcrypt.genSalt();
     const hashPass = await bcrypt.hash(password, salt);
     const emailExists = await Users.findOne({ where: { email: req.body.email } });
-    if (!password) {
-        return res.status(400).json({ msg: "Password tidak boleh kosong" });
+    if (!firstName) {
+        return res.status(400).json({ msg: "Nama depan tidak boleh kosong" });
     } else {
-        if (!email) {
-            return res.status(400).json({ msg: "Email tidak boleh kosong" });
+        if (!lastName) {
+            return res.status(400).json({ msg: "Nama belakang tidak boleh kosong" });
         } else {
-            if (!username) {
-                return res.status(400).json({ msg: "Username tidak boleh kosong" });
+            if (!password) {
+                return res.status(400).json({ msg: "Password tidak boleh kosong" });
             } else {
-                if (emailExists) {
-                    return res.status(400).json({ msg: "Email Sudah Terdaftar" });
+                if (!email) {
+                    return res.status(400).json({ msg: "Email tidak boleh kosong" });
+                } else {
+                    if (!username) {
+                        return res.status(400).json({ msg: "Username tidak boleh kosong" });
+                    } else {
+                        if (emailExists) {
+                            return res.status(400).json({ msg: "Email Sudah Terdaftar" });
+                        }
+                    }
                 }
             }
         }
     }
+    
     try {
         await Users.create({
             firstName: firstName,
             lastName: lastName,
             username: username,
             email: email,
-            password: hashPass
+            password: hashPass,
+            punyaAlat: punyaAlat,
+            lokasiLahan: lokasiLahan
         })
         res.json({ msg: "Register Berhasil dilakukan" })
     } catch (error) {
         console.log(error);
     }
-}
+};
 
-const Login = async (req, res) => {
+// app.post('/login', async (req, res) => {
+//     const { username, password } = req.body;
+//     const user = users.find(u => u.username === username);
+//     if (!user) {
+//         return res.status(400).json({ message: 'Invalid username or password' });
+//     }
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//         return res.status(400).json({ message: 'Invalid username or password' });
+//     }
+//     const token = jwt.sign({ username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+//     res.json({ token });
+// });
+
+const login = async (req, res) => {
     try {
         const user = await Users.findAll({
             where: {
-                email: req.body.email
+                username: req.body.username
             }
         });
+        if (!user) {
+            const user = await Users.findAll({
+                where: {
+                    email: req.body.email
+                }
+            });
+        }
         const match = await bcrypt.compare(req.body.password, user[0].password);
         if (!match) return res.status(400).json({
             error: true,
             msg: "Password tidak sesuai"
         });
 
-        const userId = user[0].id;
-        const name = user[0].name;
+        // const firstName = user[0].firstName;
+        // const lastName = user[0].lastName;
+        const username = user[0].username;
         const email = user[0].email;
-        const accessToken = jwt.sign({ userId, name, email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '20s' });
-        const refreshToken = jwt.sign({ userId, name, email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+        const punyaAlat = user[0].punyaAlat;
+        const accessToken = jwt.sign({ username, email, punyaAlat }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign({ username, email, punyaAlat }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
         await Users.update({ refresh_token: refreshToken }, {
             where: {
-                id: userId
+                username: username
             }
         });
         if (match) return res.status(200).json(
@@ -77,9 +119,8 @@ const Login = async (req, res) => {
                 error: false,
                 msg: "Login Berhasil Dilakukan",
                 loginResult: {
-                    userId,
                     email,
-                    name,
+                    username,
                     accessToken
                 }
             });
@@ -183,4 +224,4 @@ const Login = async (req, res) => {
 //     }
 // };
 
-// module.exports = { getUsers, Register, Login, editUser, deleteUser, getData }
+module.exports = { getUsers, register, login };
