@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const { getUsers, register, login } = require('../controller/Users');
 const { getAllLokasiLahan, getAllLocationKey, getOneLocationKey } = require('../controller/LokasiLahan');
-const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast } = require('../controller/WeatherCondition'); 
+const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast, get12HoursForecasts } = require('../controller/WeatherCondition'); 
 const { getAllKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
 
@@ -30,12 +30,13 @@ router.post('/getonelocationkey', getOneLocationKey);
 
 // Route untuk weathercondition ()
 router.get('/allweathercondition', getAllWeatherCondition);
-router.get('/latestweathercondition', getLatestWeatherCondition);
+router.post('/latestweathercondition', getLatestWeatherCondition);
 router.get('/addweathercondition', insertOneHourlyWeatherCondition);
 router.get('/add12weathercondition', insertTwelveHourlyWeatherCondition);
 
 // Route untuk weatherforecast
 router.get('/updateforecast', updateWeatherForecast);
+router.post('/displayforecasts', get12HoursForecasts);
 
 // Route untuk kalender
 router.get('/allkegiatan', getAllKegiatan);

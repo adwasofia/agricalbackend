@@ -3,6 +3,7 @@ const { AccuweatherForecast } = require('../models/accuweatherForecastModel');
 const { fetchData, fetchOneHourlyData, fetchTwelveHourlyData } = require('../apiaccuweather');
 const { getAllLocationKey } = require('./LokasiLahan');
 const nodeCron = require('node-cron');
+const { Op } = require('sequelize');
 
 const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -20,10 +21,14 @@ const getAllWeatherCondition = async (req, res) => {
 
 const getLatestWeatherCondition = async (req, res) => {
     try {
-        const weathercondition = await WeatherCondition.findOne ({
+        insertOneHourlyWeatherCondition(req.body.locationkey);
+        const weathercondition = await WeatherCondition.findOne({
+            where: {
+              locationkey: req.body.locationkey // Add your constraint here
+            },
             order: [
-                ['datetime', 'DESC']
-              ]
+              ['dateTime', 'DESC'] // Order by dateTime in descending order to get the most recent record
+            ]
         });
 
         day = days[weathercondition.dateTime.getDay()];
@@ -45,9 +50,42 @@ const getLatestWeatherCondition = async (req, res) => {
     }
 };
 
+const get12HoursForecasts = async (req, res) => {
+    try {
+        // Get the current date and time
+        const currentTime = new Date();
+
+        // Fetch forecast data where dateTime is greater than the current time
+        const forecasts = await AccuweatherForecast.findAll({
+            where: {
+                locationkey: req.body.locationkey,
+                dateTime: {
+                    [Op.gt]: currentTime // Using Op.gt (greater than) operator from Sequelize
+                }
+            },
+            order: [['dateTime', 'ASC']] // Order by dateTime in ascending order
+        });
+          
+        const transformedData = forecasts.map(data => ({
+            day: days[new Date(data.dateTime).getDay()],
+            date: new Date(data.dateTime).getDate().toString(),
+            month: months[new Date(data.dateTime).getMonth()],
+            year: new Date(data.dateTime).getFullYear(),
+            dateInfo: `${new Date(data.dateTime).getDate()} ${months[new Date(data.dateTime).getMonth()]} ${new Date(data.dateTime).getFullYear()}`,
+            time: `${new Date(data.dateTime).getHours()}.00`,
+            temperature: `${Math.round((data.temperatureValue - 32) * 5 / 9)}°C`
+        }));
+
+        res.json(transformedData);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
 const insertOneHourlyWeatherCondition = async (locationKey) => {
     try {
-        const locationKey = 3454195;
         const fetchedData = await fetchOneHourlyData(locationKey);
 
         const weathercondition = await WeatherCondition.create({ 
@@ -75,7 +113,6 @@ const insertOneHourlyWeatherCondition = async (locationKey) => {
 
 const insertTwelveHourlyWeatherCondition = async (locationKey) => {
     try {
-        const locationKey = 3454195;
         const fetchedData = await fetchTwelveHourlyData(locationKey);
 
         const transformedData = fetchedData.map(data => ({
@@ -123,4 +160,4 @@ const updateWeatherForecast = async (req, res) => {
 
 //const job = nodeCron.schedule('0 32 * * * *', insertWeatherCondition);
 
-module.exports = { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast };
+module.exports = { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast, get12HoursForecasts };
