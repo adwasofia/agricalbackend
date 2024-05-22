@@ -28,6 +28,9 @@ const Users = db.define('users', {
     },
     refreshToken: {
         type: DataTypes.STRING
+    },
+    tanaman: {
+        type: DataTypes.STRING
     }
 }, {
     freezeTableName: true,

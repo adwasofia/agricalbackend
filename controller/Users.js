@@ -134,4 +134,18 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { getUsers, register, login };
+const ubahTanaman = async (req, res) => {
+    try {
+        const user = await Users.update({ tanaman: req.body.tanaman }, {
+            where: { username: req.body.username }
+        });
+        res.status(200).json({
+            error: false,
+            msg: `Tanaman berhasil diubah menjadi ${req.body.tanaman}`
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = { getUsers, register, login, ubahTanaman };
