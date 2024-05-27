@@ -21,7 +21,7 @@ const getAllWeatherCondition = async (req, res) => {
 
 const getLatestWeatherCondition = async (req, res) => {
     try {
-        insertOneHourlyWeatherCondition(req.body.locationkey);
+        const insert = insertOneHourlyWeatherCondition(req.body.locationkey);
         const weathercondition = await WeatherCondition.findOne({
             where: {
               locationkey: req.body.locationkey // Add your constraint here
