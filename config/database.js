@@ -9,7 +9,7 @@ const db = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME,
     dialect: 'mysql',
     dialectOptions: {
         ssl:'Amazon RDS',
-        useUTC: false,
+        //useUTC: false,
     },
     pool: { maxConnections: 5, maxIdleTime: 30},
     language: 'en',
