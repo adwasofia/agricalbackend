@@ -29,11 +29,19 @@ router.post('/ubahtanaman', ubahTanaman);
 router.get('/getalllokasilahan', getAllLokasiLahan);
 router.post('/getonelocationkey', getOneLocationKey);
 
+// Route untuk Profil
+// edit nama
+// edit username
+// edit email
+// change paswsword
+// change tanaman
+// log out
+
 // Route untuk weathercondition ()
-router.get('/allweathercondition', getAllWeatherCondition);
+// router.get('/allweathercondition', getAllWeatherCondition);
 router.post('/latestweathercondition', getLatestWeatherCondition);
-router.get('/addweathercondition', insertOneHourlyWeatherCondition);
-router.get('/add12weathercondition', insertTwelveHourlyWeatherCondition);
+// router.get('/addweathercondition', insertOneHourlyWeatherCondition);
+// router.get('/add12weathercondition', insertTwelveHourlyWeatherCondition);
 
 // Route untuk weatherforecast
 router.get('/updateforecast', updateWeatherForecast);
@@ -43,6 +51,6 @@ router.post('/displayforecasts', get12HoursForecasts);
 router.get('/allkegiatan', getAllKegiatan);
 
 // Route untuk Lokasi Lahan
-router.get('/alllocationkey', getAllLocationKey);
+// router.get('/alllocationkey', getAllLocationKey);
 
 module.exports = { router };

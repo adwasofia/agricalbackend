@@ -95,13 +95,14 @@ const login = async (req, res) => {
         const username = user.username;
         const email = user.email;
         const punyaAlat = user.punyaAlat;
+        const tanaman = user.tanaman;
         const accessToken = jwt.sign(
-            { username, email, punyaAlat },
+            { username, email, punyaAlat, tanaman },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: '15m' }
         );
         const refreshToken = jwt.sign(
-            { username, email, punyaAlat },
+            { username, email, punyaAlat, tanaman },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '1d' }
         );
@@ -120,7 +121,8 @@ const login = async (req, res) => {
                 username,
                 punyaAlat,
                 accessToken,
-                refreshToken
+                refreshToken,
+                tanaman
             }
         });
 
@@ -131,6 +133,34 @@ const login = async (req, res) => {
             msg: 'Internal server error',
             details: error.message
         });
+    }
+};
+
+const ubahNama = async (req, res) => {
+    try {
+        const user = await Users.update({ firstName: req.body.firstname, lastName: req.body.lastname }, {
+            where: { username: req.body.username }
+        });
+        res.status(200).json({
+            error: false,
+            msg: `Nama berhasil diubah menjadi ${req.body.firstname} ${req.body.lastname}`
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const ubahEmail = async (req, res) => {
+    try {
+        const user = await Users.update({ email: req.body.email }, {
+            where: { username: req.body.username }
+        });
+        res.status(200).json({
+            error: false,
+            msg: `Nama berhasil diubah menjadi ${req.body.firstname} ${req.body.lastname}`
+        });
+    } catch (error) {
+        console.log(error);
     }
 };
 
