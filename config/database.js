@@ -13,7 +13,7 @@ const db = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME,
     },
     pool: { maxConnections: 5, maxIdleTime: 30},
     language: 'en',
-    timezone: '+07.00'
+    timezone: '+07:00'
 })
 
 const startdb = async () => {
