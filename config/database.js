@@ -11,8 +11,7 @@ const db = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME,
         ssl:'Amazon RDS'
     },
     pool: { maxConnections: 5, maxIdleTime: 30},
-    language: 'en',
-    timezone: "+07:00"
+    language: 'en'
 })
 
 const startdb = async () => {
