@@ -22,3 +22,5 @@ const getLatestKondisiLahan = async (req, res) => {
         console.log(error);
     }
 };
+
+module.exports = { getLatestKondisiLahan };
