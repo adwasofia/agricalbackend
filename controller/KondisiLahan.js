@@ -2,7 +2,7 @@ const { KondisiLahan } = require('../models/kondisiLahanModel');
 
 const getLatestKondisiLahan = async (req, res) => {
     try {
-        const kondisilahan = await Kondisilahan.findOne({
+        const kondisilahan = await KondisiLahan.findOne({
             attributes: [
                 'date', 
                 'time', 
