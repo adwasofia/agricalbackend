@@ -13,22 +13,7 @@ const getLatestVolume = async (req, res) => {
                 [Sequelize.fn('MAX', Sequelize.col('date')), 'latestSaleDate'],
                 'volumePenjualan'
             ],
-            where: {
-                date: {
-                    [Op.and]: [
-                        Sequelize.where(
-                            Sequelize.fn('MONTH', Sequelize.col('date')),
-                            Sequelize.fn('MONTH', latestMonth)
-                        ),
-                        Sequelize.where(
-                            Sequelize.fn('YEAR', Sequelize.col('date')),
-                            Sequelize.fn('YEAR', latestMonth)
-                        )
-                    ]
-                }
-            },
-            group: ['tanaman', 'volumePenjualan'],
-            order: [[Sequelize.fn('MAX', Sequelize.col('date')), 'DESC']]
+            group: ['tanaman']
         });
 
         const formattedData = latestMonthData.map(data => ({
