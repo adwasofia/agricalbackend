@@ -1,5 +1,17 @@
 const { KondisiLahan } = require('../models/kondisiLahanModel');
 
+function determineWeatherPhrase(temperature, rainamount) {
+    if (rainamount > 0) {
+        return 'Hujan';
+    } else {
+        if (temperature >= 27) {
+            return 'Cerah';
+        } else {
+            return 'Berawan';
+        }
+    }
+}
+
 const getLatestKondisiLahan = async (req, res) => {
     try {
         const kondisilahan = await KondisiLahan.findOne({
@@ -34,6 +46,7 @@ const getLatestKondisiLahan = async (req, res) => {
             solarradiation: kondisilahan.solarRadiation,
             humidity: kondisilahan.humidity,
             temperature: (`${kondisilahan.temperature}°C`),
+            iconPhrase: determineWeatherPhrase(kondisilahan.temperature, kondisilahan.rainAmount),
             pressure: kondisilahan.pressure,
             windspeed: kondisilahan.windSpeed,
             winddirection: kondisilahan.windDirection,
