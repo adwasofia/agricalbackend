@@ -22,7 +22,9 @@ const getLatestVolume = async (req, res) => {
             volumePenjualan: data.volumePenjualan
         }));
 
-        res.json(formattedData);
+        const showedData = {tanaman: formattedData}
+
+        res.json(showedData);
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ message: 'Internal server error' });
