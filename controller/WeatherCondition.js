@@ -8,6 +8,18 @@ const { Op } = require('sequelize');
 const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 
+function determineWeatherPhrase(temperature, hasprecipitation) {
+    if (hasprecipitation) {
+        return 'Hujan';
+    } else {
+        if (temperature >= 27) {
+            return 'Cerah';
+        } else {
+            return 'Berawan';
+        }
+    }
+}
+
 const getAllWeatherCondition = async (req, res) => {
     try {
         const weathercondition = await WeatherCondition.findAll ({
@@ -40,7 +52,7 @@ const getLatestWeatherCondition = async (req, res) => {
             dateInfo: (`${day}, ${date} ${month} ${year}`),
             time: (`${weathercondition.dateTime.getHours()}.00`),
             weatherIcon: weathercondition.weatherIcon,
-            iconPhrase: weathercondition.iconPhrase,
+            iconPhrase: determineWeatherPhrase(Math.round((weathercondition.temperatureValue - 32) * 5 / 9), weathercondition.hasPrecipitation),
             temperature: (`${Math.round((weathercondition.temperatureValue - 32) * 5 / 9)}°C`)
         }]}
 
@@ -73,7 +85,8 @@ const get12HoursForecasts = async (req, res) => {
             year: new Date(data.dateTime).getFullYear(),
             dateInfo: `${new Date(data.dateTime).getDate()} ${months[new Date(data.dateTime).getMonth()]} ${new Date(data.dateTime).getFullYear()}`,
             time: `${new Date(data.dateTime).getHours()}.00`,
-            temperature: `${Math.round((data.temperatureValue - 32) * 5 / 9)}°C`
+            temperature: `${Math.round((data.temperatureValue - 32) * 5 / 9)}°C`,
+            iconPhrase: determineWeatherPhrase(Math.round((data.temperatureValue - 32) * 5 / 9), data.hasPrecipitation)
         }));
 
         res.json(transformedData);
