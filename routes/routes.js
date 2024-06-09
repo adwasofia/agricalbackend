@@ -6,6 +6,7 @@ const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeathe
 const { getAllKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
 const { getLatestKondisiLahan } = require('../controller/KondisiLahan');
+const { getLatestVolume, getHighestVolume, getHighestPrice } = require('../controller/DataPasar');
 
 const router = express.Router();
 const middle = express.urlencoded({ extended: false });
@@ -56,5 +57,10 @@ router.get('/allkegiatan', getAllKegiatan);
 
 // Route untuk Lokasi Lahan
 // router.get('/alllocationkey', getAllLocationKey);
+
+// Routes untuk data pasar
+router.get('/plant-volume-latest-month', getLatestVolume);
+router.get('/highest-volume-plant-latest-month', getHighestVolume);
+router.get('/highest-harga-jual-plant-latest-month', getHighestPrice);
 
 module.exports = { router };
