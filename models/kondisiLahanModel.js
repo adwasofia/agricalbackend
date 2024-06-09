@@ -5,12 +5,14 @@ const { DataTypes } = Sequelize;
 
 const KondisiLahan = db.define('kondisilahan', {
     date: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        type: DataTypes.DATEONLY,
+        defaultValue: Sequelize.literal('CURRENT_DATE'),
         primaryKey: true
     },
     time: {
-        type: DataTypes.TIME
+        type: DataTypes.TIME,
+        defaultValue: Sequelize.literal('CURRENT_TIME'),
+        primaryKey: true
     },
     voltage: {
         type: DataTypes.FLOAT
