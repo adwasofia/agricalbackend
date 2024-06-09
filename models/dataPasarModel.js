@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { db } = require('../config/database');
 
-const DataPasar = db.define('sales', {
+const DataPasar = db.define('datapasar', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
