@@ -6,7 +6,8 @@ const { DataTypes } = Sequelize;
 const KondisiLahan = db.define('kondisilahan', {
     date: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
+        primaryKey: true
     },
     time: {
         type: DataTypes.TIME
@@ -18,9 +19,6 @@ const KondisiLahan = db.define('kondisilahan', {
         type: DataTypes.FLOAT
     },
     solarRadiation: {
-        type: DataTypes.FLOAT
-    },
-    moisture: {
         type: DataTypes.FLOAT
     },
     humidity: {
@@ -43,6 +41,18 @@ const KondisiLahan = db.define('kondisilahan', {
     },
     rainAmount: {
         type: DataTypes.FLOAT
+    },
+    statusIrigasi: {
+        type: DataTypes.BOOLEAN
+    },
+    waterLevel: {
+        type: DataTypes.FLOAT
+    },
+    moisture: {
+        type: DataTypes.FLOAT
+    },
+    isEmergency: {
+        type: DataTypes.BOOLEAN
     },
 
 }, {
