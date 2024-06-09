@@ -1,6 +1,6 @@
 // const express = require('express');
 // const router = express.Router();
-// const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const DataPasar = require('../models/dataPasarModel');
 
 // Endpoint 1: Get Latest Data for Each Plant with Volume Penjualan in the Latest Month
