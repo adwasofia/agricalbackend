@@ -5,7 +5,7 @@ const { getAllLokasiLahan, getAllLocationKey, getOneLocationKey } = require('../
 const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast, get12HoursForecasts } = require('../controller/WeatherCondition'); 
 const { getAllKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
-const { getLatestKondisiLahan, sendInstruction } = require('../controller/KondisiLahan');
+const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require('../controller/KondisiLahan');
 const { getLatestVolume, getHighestVolume, getHighestPrice } = require('../controller/DataPasar');
 
 const router = express.Router();
@@ -41,8 +41,8 @@ router.post('/getonelocationkey', getOneLocationKey);
 
 // Route untuk Kondisi Lahan
 router.get('/latestkondisilahan', getLatestKondisiLahan)
-router.post('/turn-on-irigasi', sendInstruction('TURN_ON_IRRIGATION'))
-router.post('/turn-off-irigasi', sendInstruction('TURN_OFF_IRRIGATION'))
+router.post('/turn-on-irigasi', sendInstructionOn)
+router.post('/turn-off-irigasi', sendInstructionOff)
 
 // Route untuk weathercondition ()
 // router.get('/allweathercondition', getAllWeatherCondition);
