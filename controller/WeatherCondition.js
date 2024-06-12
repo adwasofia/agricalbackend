@@ -48,7 +48,7 @@ const getLatestWeatherCondition = async (req, res) => {
         month = months[weathercondition.dateTime.getMonth()];
         year = weathercondition.dateTime.getFullYear();
 
-        revisedHour = weathercondition.dateTime.setHours(date.getHours() + 7);
+        revisedHour = weathercondition.dateTime.setHours(weathercondition.dateTime.getHours() + 7);
 
         const latestweathercondition = {data: [{
             dateInfo: (`${day}, ${date} ${month} ${year}`),
