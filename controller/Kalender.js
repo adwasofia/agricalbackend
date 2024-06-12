@@ -11,4 +11,20 @@ const getAllKegiatan = async (req, res) => {
     }
 };
 
-module.exports = { getAllKegiatan };
+const insertKegiatan = async (req, res) => {
+    try {
+        const newkegiatan = await Kalender.create({
+            tanggal: new Date(),
+            detailkegiatan: req.body.detailkegiatan,
+            username: req.body.username
+        });
+
+        res.status(200).json({
+            msg: `Satu kegiatan baru dari username ${req.body.username} telah ditambahkan.`
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = { getAllKegiatan, insertKegiatan };

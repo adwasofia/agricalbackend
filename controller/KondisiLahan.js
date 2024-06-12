@@ -77,7 +77,9 @@ const sendInstruction = async (action) => {
         });
 
         const data = await response.json();
-        console.log('Response from API:', data);
+        console.log(data);
+
+        //res.json('Response from API:', data);
     } catch (error) {
         console.error('Error sending instruction:', error);
     }
