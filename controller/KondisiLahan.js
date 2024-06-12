@@ -63,4 +63,32 @@ const getLatestKondisiLahan = async (req, res) => {
     }
 };
 
-module.exports = { getLatestKondisiLahan };
+
+const sendInstruction = async (action) => {
+    const apiUrl = 'https://dm2kvdp06j.execute-api.a-southeast-2.amazonaws.com/prod/irrigation';
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action })
+        });
+
+        const data = await response.json();
+        console.log('Response from API:', data);
+    } catch (error) {
+        console.error('Error sending instruction:', error);
+    }
+};
+
+// Call these functions when the respective buttons are pressed
+// For turning on irrigation
+// sendInstruction('TURN_ON_IRRIGATION');
+
+// For turning on weather monitoring
+// sendInstruction('TURN_ON_WEATHER_MONITORING');
+
+
+module.exports = { getLatestKondisiLahan, sendInstruction };
