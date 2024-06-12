@@ -83,6 +83,22 @@ const sendInstruction = async (action) => {
     }
 };
 
+const sendInstructionOn = async (req, res) => {
+    try {
+        sendInstruction('TURN_ON_IRRIGATION');
+    } catch (error) {
+        console.error('Error sending instruction:', error);
+    }
+};
+
+const sendInstructionOff = async (req, res) => {
+    try {
+        sendInstruction('TURN_OFF_IRRIGATION');
+    } catch (error) {
+        console.error('Error sending instruction:', error);
+    }
+};
+
 // Call these functions when the respective buttons are pressed
 // For turning on irrigation
 // sendInstruction('TURN_ON_IRRIGATION');
@@ -91,4 +107,4 @@ const sendInstruction = async (action) => {
 // sendInstruction('TURN_ON_WEATHER_MONITORING');
 
 
-module.exports = { getLatestKondisiLahan, sendInstruction };
+module.exports = { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff };
