@@ -65,7 +65,7 @@ const getLatestKondisiLahan = async (req, res) => {
 
 
 const sendInstruction = async (action) => {
-    const apiUrl = 'https://dm2kvdp06j.execute-api.a-southeast-2.amazonaws.com/prod/irrigation';
+    const apiUrl = 'https://dm2kvdp06j.execute-api.ap-southeast-2.amazonaws.com/agrical-api';
 
     try {
         const response = await fetch(apiUrl, {
