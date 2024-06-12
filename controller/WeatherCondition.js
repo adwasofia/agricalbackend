@@ -69,6 +69,8 @@ const get12HoursForecasts = async (req, res) => {
         // Get the current date and time
         const currentTime = new Date();
 
+        insertTwelveHourlyWeatherCondition(678039);
+
         // Fetch forecast data where dateTime is greater than the current time
         const forecasts = await AccuweatherForecast.findAll({
             where: {
@@ -79,6 +81,16 @@ const get12HoursForecasts = async (req, res) => {
             },
             order: [['dateTime', 'ASC']] // Order by dateTime in ascending order
         });
+
+        // alllocationkeys.forEach(location => {
+        //     //console.log(location.locationkey);
+        //     insertTwelveHourlyWeatherCondition(location.locationkey);
+        // });
+
+        forecasts.forEach(data => {
+            data.dateTime.setHours(data.dateTime.getHours() + 7)
+        });
+
           
         const transformedData = forecasts.map(data => ({
             day: days[new Date(data.dateTime).getDay()],
