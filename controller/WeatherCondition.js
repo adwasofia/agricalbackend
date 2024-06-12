@@ -48,11 +48,11 @@ const getLatestWeatherCondition = async (req, res) => {
         month = months[weathercondition.dateTime.getMonth()];
         year = weathercondition.dateTime.getFullYear();
 
-        revisedHour = weathercondition.dateTime.setHours(weathercondition.dateTime.getHours() + 7);
+        weathercondition.dateTime.setHours(weathercondition.dateTime.getHours() + 7);
 
         const latestweathercondition = {data: [{
             dateInfo: (`${day}, ${date} ${month} ${year}`),
-            time: (`${revisedHour.getHours()}.00`),
+            time: (`${weathercondition.dateTime.getHours()}.00`),
             weatherIcon: weathercondition.weatherIcon,
             iconPhrase: determineWeatherPhrase(Math.round((weathercondition.temperatureValue - 32) * 5 / 9), weathercondition.hasPrecipitation),
             temperature: (`${Math.round((weathercondition.temperatureValue - 32) * 5 / 9)}°C`)
