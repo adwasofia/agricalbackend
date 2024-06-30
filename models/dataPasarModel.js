@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { db } = require('../config/database');
 
-const DataPasar = db.define('datapasar', {
+const DataPasar = db.define('datapasar2', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -16,8 +16,12 @@ const DataPasar = db.define('datapasar', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    volumePenjualan: {
-        type: DataTypes.INTEGER,
+    lokasi: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    volumeProduksi: {
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     hargaJual: {
