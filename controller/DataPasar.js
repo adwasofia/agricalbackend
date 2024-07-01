@@ -134,7 +134,7 @@ const getHighestPrice = async (req, res) => {
         });
         const formattedData = {
             tanaman: highestHargaJualPlant.tanaman,
-            volumePenjualan: Math.round(highestHargaJualPlant.hargaJual)
+            hargaJual: Math.round(highestHargaJualPlant.hargaJual)
         };
         res.json(formattedData);
         res.json(highestHargaJualPlant);
