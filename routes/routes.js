@@ -6,7 +6,7 @@ const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeathe
 const { getAllKegiatan, insertKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
 const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require('../controller/KondisiLahan');
-const { getLatestVolume, getHighestVolume, getHighestPrice } = require('../controller/DataPasar');
+const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation } = require('../controller/DataPasar');
 
 const router = express.Router();
 const middle = express.urlencoded({ extended: false });
@@ -65,5 +65,8 @@ router.post('/insertkegiatan', insertKegiatan);
 router.get('/plant-volume-latest-month', getLatestVolume);
 router.get('/highest-volume-plant-latest-month', getHighestVolume);
 router.get('/highest-harga-jual-plant-latest-month', getHighestPrice);
+router.get('/avgvolumeproduksi', avgVolumeProduksi);
+router.get('/avghargajual', avgHargaJual);
+router.get('/recommendation', getRecommendation);
 
 module.exports = { router };
