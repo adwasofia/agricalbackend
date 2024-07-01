@@ -103,10 +103,10 @@ const getHighestVolume = async (req, res) => {
             order: [['volumeProduksi', 'DESC']],
             limit: 1
         });
-        const formattedData = highestVolumePlant.map(data => ({
-            tanaman: data.tanaman,
-            volumePenjualan: Math.round(data.volumeProduksi)
-        }));
+        const formattedData = {
+            tanaman: highestVolumePlant.tanaman,
+            volumePenjualan: Math.round(highestVolumePlant.volumeProduksi)
+        };
         res.json(formattedData);
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -132,10 +132,10 @@ const getHighestPrice = async (req, res) => {
             order: [['hargaJual', 'DESC']],
             limit: 1
         });
-        const formattedData = highestHargaJualPlant.map(data => ({
-            tanaman: data.tanaman,
-            hargaJual: Math.round(data.hargaJual)
-        }));
+        const formattedData = {
+            tanaman: highestHargaJualPlant.tanaman,
+            volumePenjualan: Math.round(highestHargaJualPlant.hargaJual)
+        };
         res.json(formattedData);
         res.json(highestHargaJualPlant);
     } catch (error) {
