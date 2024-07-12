@@ -1,5 +1,5 @@
 const { Sequelize, Op } = require('sequelize');
-const DataPasar = require('../models/irrigationScheduleModel');
+const IrrigationSchedule = require('../models/irrigationScheduleModel');
 
 const createIrrigationSchedule = async (req, res) => {
     try {
@@ -16,7 +16,7 @@ const getAllIrrigationSchedule = async (req, res) => {
         const schedules = await IrrigationSchedule.findAll();
         res.status(200).json(schedules);
     } catch(error) {
-        res.status(500).json({ error: 'Internal server error.' });
+        res.status(500).json({ error: `Internal server error. ${error}` });
     }
 };
 

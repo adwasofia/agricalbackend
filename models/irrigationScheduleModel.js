@@ -25,6 +25,9 @@ const IrrigationSchedule = db.define('irrigationschedule', {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     }
+}, {
+    timestamps: false,
+    freezeTableName: true
 });
 
 module.exports = IrrigationSchedule;
