@@ -14,6 +14,7 @@ function avgVolumeProduksi(tanaman) {
           })
             .then(result => {
               const averageProd = result[0].get('avgproduksi');
+              console.log(averageProd);
               return (averageProd);
             })
             .catch(error => {
@@ -37,10 +38,11 @@ function avgHargaJual(tanaman) {
           })
             .then(result => {
               const averageHarga = result[0].get('avghargajual');
+              console.log(averageHarga);
               return (averageHarga);
             })
             .catch(error => {
-              console.error('Error fetching average prodution volume:', error);
+              console.error('Error fetching average selling price:', error);
             });
     } catch (error) {
         console.error(error);
@@ -157,9 +159,13 @@ async function isRecommendedToPlant(inputdate) {
 
   try {
     for (const plant of plants) {
+        // Get the average production volume
+      const averageVolumeValue = avgVolumeProduksi(plant);
+      const averagePriceValue = avgHargaJual(plant);
+
       // Get the production volume for the future date
-      const futureVolume = await DataPasar.findOne({
-        attributes: ['volumeProduksi'],
+      const futureValue = await DataPasar.findOne({
+        attributes: ['volumeProduksi', 'hargaJual'],
         where: {
             tanaman: plant,
             date: {
@@ -171,18 +177,14 @@ async function isRecommendedToPlant(inputdate) {
         }
       });
 
-      const futureVolumeValue = futureVolume ? futureVolume.get('volumeProduksi') : null;
-
-      // Get the average production volume
-      const averageVolumeValue = avgVolumeProduksi(plant);
-
-      //const averageVolumeValue = averageVolume ? averageVolume.get('averageVolumeProduksi') : null;
+      const futureVolumeValue = futureValue ? futureValue.get('volumeProduksi') : null;
+      const futurePriceValue = futureValue ? futureValue.get('hargaJual') : null;
 
       // Determine recommendation
-      if (futureVolumeValue !== null && averageVolumeValue !== null) {
-        recommendations[plant] = futureVolumeValue < averageVolumeValue;
+      if (futureVolumeValue !== null && averageVolumeValue !== null && futurePriceValue !== null && averagePriceValue !== null) {
+        recommendations[plant] = (futureVolumeValue < averageVolumeValue) && (futurePriceValue > averagePriceValue);
       } else {
-        recommendations[plant] = false; // or null, or another way to indicate missing data
+        recommendations[plant] = false;
       }
     }
 
@@ -193,10 +195,6 @@ async function isRecommendedToPlant(inputdate) {
   }
 };
 
-// Usage example:
-// isRecommendedToPlant('2024-01-01').then(recommendations => {
-//   console.log('Recommendations:', recommendations);
-// });
 
 const getRecommendation = async (req, res) => {
     try {
