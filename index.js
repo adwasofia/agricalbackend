@@ -1,12 +1,8 @@
-// const { getAllLokasiLahan } = require('./controller/LokasiLahan');
-//const { job } = require('./controller/WeatherCondition'); 
-// const { fetchData } = require('./apiaccuweather');
 const nodeCron = require('node-cron');
 
 const express = require('express');
 const { startdb } = require('./config/database');
 const { router } = require('./routes/routes');
-const auth = require("./middleware/auth");
 const { authenticateJWT } = require('./middleware/tokenVerification');
 
 const app = express();
