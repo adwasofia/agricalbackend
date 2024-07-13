@@ -96,19 +96,28 @@ const login = async (req, res) => {
         const email = user.email;
         const punyaAlat = user.punyaAlat;
         const tanaman = user.tanaman;
-        const accessToken = jwt.sign(
-            { username, email, punyaAlat, tanaman },
+        // const accessToken = jwt.sign(
+        //     { username, email, punyaAlat, tanaman },
+        //     process.env.ACCESS_TOKEN_SECRET,
+        //     { expiresIn: '59m' }
+        // );
+        // const refreshToken = jwt.sign(
+        //     { username, email, punyaAlat, tanaman },
+        //     process.env.REFRESH_TOKEN_SECRET,
+        //     { expiresIn: '1d' }
+        // );
+
+        const token = jwt.sign(
+            {
+                username,
+                email
+            },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '59m' }
-        );
-        const refreshToken = jwt.sign(
-            { username, email, punyaAlat, tanaman },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d' }
+            { expiresIn: "24h" }
         );
 
         // Update the user's refresh token in the database
-        await Users.update({ refreshToken: refreshToken }, {
+        await Users.update({ refreshToken: token }, {
             where: { username: username }
         });
 
@@ -120,8 +129,7 @@ const login = async (req, res) => {
                 email,
                 username,
                 punyaAlat,
-                accessToken,
-                refreshToken,
+                token,
                 tanaman
             }
         });

@@ -6,6 +6,8 @@ const nodeCron = require('node-cron');
 const express = require('express');
 const { startdb } = require('./config/database');
 const { router } = require('./routes/routes');
+const auth = require("./middleware/auth");
+const { authenticateJWT } = require('./middleware/tokenVerification');
 
 const app = express();
 
@@ -21,6 +23,11 @@ app.listen(process.env.PORT, (error) => {
     } else {
         console.log(`Server berjalan di port ${process.env.PORT}`);
     }
+});
+
+// authentication endpoint
+app.get("/auth-endpoint", authenticateJWT, (request, response) => {
+    response.json({ message: "You are authorized to access me" });
 });
 
 module.exports = { app };
