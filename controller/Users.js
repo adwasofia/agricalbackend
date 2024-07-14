@@ -96,16 +96,6 @@ const login = async (req, res) => {
         const email = user.email;
         const punyaAlat = user.punyaAlat;
         const tanaman = user.tanaman;
-        // const accessToken = jwt.sign(
-        //     { username, email, punyaAlat, tanaman },
-        //     process.env.ACCESS_TOKEN_SECRET,
-        //     { expiresIn: '59m' }
-        // );
-        // const refreshToken = jwt.sign(
-        //     { username, email, punyaAlat, tanaman },
-        //     process.env.REFRESH_TOKEN_SECRET,
-        //     { expiresIn: '1d' }
-        // );
 
         const token = jwt.sign(
             {
@@ -141,6 +131,14 @@ const login = async (req, res) => {
             msg: 'Internal server error',
             details: error.message
         });
+    }
+};
+
+const logout = async (req, res) => {
+    try {
+
+    } catch (error) {
+        
     }
 };
 
