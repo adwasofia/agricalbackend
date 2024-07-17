@@ -134,14 +134,6 @@ const login = async (req, res) => {
     }
 };
 
-const logout = async (req, res) => {
-    try {
-
-    } catch (error) {
-        
-    }
-};
-
 const ubahNama = async (req, res) => {
     try {
         const user = await Users.update({ firstName: req.body.firstname, lastName: req.body.lastname }, {

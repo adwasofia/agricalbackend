@@ -3,27 +3,42 @@ const { Kalender } = require('../models/kalenderModel');
 const getAllKegiatan = async (req, res) => {
     try {
         const kalender = await Kalender.findAll ({
-            attributes: ['idkegiatan', 'tanggal', 'detailkegiatan', 'username']
+            attributes: ['idkegiatan', 'username', 'jeniskegiatan', 'namakegiatan', 'catatan', 'tanggal']
         });
-        res.json(kalender);
+        if (!kalender) {
+            return res.status(404).json({message: "Kalender not found."});
+        }
+        return res.status(200).json(kalender);
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            details: error.message
+        });
     }
 };
 
 const insertKegiatan = async (req, res) => {
+    const { username, jeniskegiatan, namakegiatan, catatan, tanggal } = req.body;
+if (!username || !jeniskegiatan || !namakegiatan || !catatan || !tanggal) {
+        return res.status(404).json({message: "Kalender not found."});
+    }
     try {
         const newkegiatan = await Kalender.create({
-            tanggal: new Date(),
-            detailkegiatan: req.body.detailkegiatan,
-            username: req.body.username
+            username: username,
+            jeniskegiatan: jeniskegiatan,
+            namakegiatan: namakegiatan,
+            catatan: catatan,
+            tanggal: tanggal
         });
-
-        res.status(200).json({
-            msg: `Satu kegiatan baru dari username ${req.body.username} telah ditambahkan.`
+        return res.status(200).json({
+            message: "Satu kegiatan baru telah ditambahkan.",
+            details: newkegiatan
         });
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            details: error.message
+        });
     }
 };
 

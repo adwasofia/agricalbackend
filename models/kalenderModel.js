@@ -9,14 +9,23 @@ const Kalender = db.define('kalender', {
         autoIncrement: true,
         primaryKey: true
     },
-    tanggal: {
-        type: DataTypes.DATE
-    },
-    detailkegiatan: {
-        type: DataTypes.STRING
-    },
     username: {
         type: DataTypes.STRING
+    },
+    jeniskegiatan: {
+        type: DataTypes.ENUM('Tanam', 'Rawat', 'Panen'),
+        allowNull: false
+    },
+    namakegiatan: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    catatan: {
+        type: DataTypes.STRING
+    },
+    tanggal: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
     }
 }, {
     freezeTableName: true,
