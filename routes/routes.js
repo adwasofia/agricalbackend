@@ -3,7 +3,7 @@ const axios = require('axios');
 const { getUsers, register, login, ubahTanaman } = require('../controller/Users');
 const { getAllLokasiLahan, getAllLocationKey, getOneLocationKey } = require('../controller/LokasiLahan');
 const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast, get12HoursForecasts } = require('../controller/WeatherCondition'); 
-const { getAllKegiatan, insertKegiatan } = require('../controller/Kalender');
+const { getAllKegiatan, insertKegiatan, updateKegiatan, deleteKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
 const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require('../controller/KondisiLahan');
 const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation } = require('../controller/DataPasar');
@@ -58,6 +58,8 @@ router.post('/displayforecasts', get12HoursForecasts);
 // Route untuk kalender
 router.get('/allkegiatan', getAllKegiatan);
 router.post('/insertkegiatan', insertKegiatan);
+router.put('/updatekegiatan/:id', updateKegiatan);
+router.delete('/deletekegiatan/:id', deleteKegiatan);
 
 // Route untuk Lokasi Lahan
 // router.get('/alllocationkey', getAllLocationKey);
