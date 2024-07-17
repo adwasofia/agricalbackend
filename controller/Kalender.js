@@ -1,12 +1,13 @@
 const { Kalender } = require('../models/kalenderModel');
 
 const getAllKegiatan = async (req, res) => {
+    const username = req.body;
     try {
         const kalender = await Kalender.findAll ({
-            attributes: ['idkegiatan', 'username', 'jeniskegiatan', 'namakegiatan', 'catatan', 'tanggal']
+            where: {username: username}
         });
         if (!kalender) {
-            return res.status(404).json({message: "Kalender not found."});
+            return res.status(404).json({message: "Kegiatan not found."});
         }
         return res.status(200).json(kalender);
     } catch (error) {
