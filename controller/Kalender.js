@@ -1,7 +1,7 @@
 const { Kalender } = require('../models/kalenderModel');
 
 const getAllKegiatan = async (req, res) => {
-    const username = req.body;
+    const username = req.body.username;
     try {
         const kalender = await Kalender.findAll ({
             where: {username: username}
