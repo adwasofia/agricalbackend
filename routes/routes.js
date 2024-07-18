@@ -56,7 +56,7 @@ router.get('/updateforecast', updateWeatherForecast);
 router.post('/displayforecasts', get12HoursForecasts);
 
 // Route untuk kalender
-router.get('/allkegiatan', getAllKegiatan);
+router.post('/allkegiatan', getAllKegiatan);
 router.post('/insertkegiatan', insertKegiatan);
 router.put('/updatekegiatan/:id', updateKegiatan);
 router.delete('/deletekegiatan/:id', deleteKegiatan);

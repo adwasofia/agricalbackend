@@ -1,186 +1,101 @@
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-const { DataCuaca, DataSensor, DataProduksi, DataHarga } = require('./models'); // Sesuaikan dengan model yang digunakan
+function rekomendasiWaktuTanam(dataCuaca, dataSensor, dataProduksi2023, dataHarga2023, dataProduksi2024, dataHarga2024) {
+  const plants = ['Bawang Merah', 'Cabai Merah Besar', 'Cabai Keriting', 'Cabai Rawit'];
+  const rekomendasi = {};
 
-const plants = ['Cabai Merah Besar', 'Cabai Keriting', 'Cabai Rawit', 'Bawang Merah'];
-let rekomendasi = {};
+  // Langkah 1: Memproses data produksi dan harga 2023
+  const produksi2023 = hitungRataRataBulanan(dataProduksi2023);
+  const harga2023 = hitungRataRataBulanan(dataHarga2023);
 
-async function rekomendasiWaktuTanam() {
-  try {
-    for (let plant of plants) {
-      // Ambil data produksi 2023
-      const produksi2023 = await DataProduksi.findAll({
-        where: {
-          tanaman: plant,
-          tahun: 2023
-        }
-      });
+  // Langkah 2: Memproses data produksi dan harga 2024
+  const produksi2024 = hitungRataRataBulanan(dataProduksi2024);
+  const harga2024 = hitungRataRataBulanan(dataHarga2024);
 
-      // Ambil data produksi 2024 (sampai bulan ini)
-      const produksi2024 = await DataProduksi.findAll({
-        where: {
-          tanaman: plant,
-          tahun: 2024
-        }
-      });
+  // Langkah 3: Menentukan waktu tanam yang ideal
+  for (const plant of plants) {
+      let bestMonth = null;
+      let bestMonthValue = -Infinity;
 
-      // Ambil data harga 2023
-      const harga2023 = await DataHarga.findAll({
-        where: {
-          tanaman: plant,
-          tahun: 2023
-        }
-      });
+      for (let month = 1; month <= 12; month++) {
+          // Mengecek cuaca di bulan penanaman dan beberapa hari setelahnya
+          if (!isCuacaIdeal(dataCuaca, dataSensor, month)) continue;
 
-      // Ambil data harga 2024 (sampai bulan ini)
-      const harga2024 = await DataHarga.findAll({
-        where: {
-          tanaman: plant,
-          tahun: 2024
-        }
-      });
+          // Mengecek harga jual 90 hari setelah penanaman, menggunakan data 2023 jika data 2024 tidak tersedia
+          const panenMonth = (month + 3) % 12 || 12;
+          let hargaPanen;
+          if (harga2024[plant] && harga2024[plant][panenMonth]) {
+              hargaPanen = harga2024[plant][panenMonth];
+          } else {
+              hargaPanen = harga2023[plant][panenMonth];
+          }
 
-      // Ambil data cuaca untuk 2024
-      const cuaca2024 = await DataCuaca.findAll({
-        where: {
-          tahun: 2024
-        }
-      });
+          if (hargaPanen > bestMonthValue) {
+              bestMonthValue = hargaPanen;
+              bestMonth = month;
+          }
+      }
 
-      // Ambil data sensor di lahan
-      const sensorData = await DataSensor.findAll({
-        where: {
-          tanaman: plant,
-          tahun: 2024
-        }
-      });
-
-      // Hitung rata-rata produksi dan harga bulanan 2023
-      const rataRataProduksi2023 = hitungRataRataBulanan(produksi2023);
-      const rataRataHarga2023 = hitungRataRataBulanan(harga2023);
-
-      // Analisis tren produksi dan harga 2024
-      const trenProduksi2024 = analisisTren(produksi2024);
-      const trenHarga2024 = analisisTren(harga2024);
-
-      // Analisis kondisi cuaca optimal
-      const kondisiCuacaOptimal = analisisCuaca(cuaca2024, plant);
-
-      // Analisis kondisi sensor optimal
-      const kondisiSensorOptimal = analisisSensor(sensorData, plant);
-
-      // Evaluasi bulan terbaik untuk penanaman
-      const bulanTerbaik = evaluasiBulanTerbaik(kondisiCuacaOptimal, kondisiSensorOptimal, trenProduksi2024, trenHarga2024, rataRataProduksi2023, rataRataHarga2023);
-
-      // Simpan rekomendasi
-      rekomendasi[plant] = bulanTerbaik;
-    }
-
-    return rekomendasi;
-  } catch (error) {
-    console.error('Error determining recommendations:', error);
-    return null;
+      rekomendasi[plant] = bestMonth;
   }
+
+  return rekomendasi;
 }
 
 function hitungRataRataBulanan(data) {
   const monthlyTotals = {};
   data.forEach(entry => {
-    const month = new Date(entry.date).getMonth() + 1;
-    if (!monthlyTotals[month]) {
-      monthlyTotals[month] = { total: 0, count: 0 };
-    }
-    monthlyTotals[month].total += entry.volumeProduksi || entry.hargaJual;
-    monthlyTotals[month].count++;
+      const month = new Date(entry.date).getMonth() + 1;
+      if (!monthlyTotals[month]) {
+          monthlyTotals[month] = { total: 0, count: 0 };
+      }
+      monthlyTotals[month].total += entry.volumeProduksi || entry.harga;
+      monthlyTotals[month].count++;
   });
-  
+
   const monthlyAverages = {};
   for (let month in monthlyTotals) {
-    monthlyAverages[month] = monthlyTotals[month].total / monthlyTotals[month].count;
+      monthlyAverages[month] = monthlyTotals[month].total / monthlyTotals[month].count;
   }
 
   return monthlyAverages;
 }
 
-function analisisTren(data) {
-  // Contoh analisis tren sederhana
-  const trends = {};
-  data.forEach(entry => {
-    const month = new Date(entry.date).getMonth() + 1;
-    if (!trends[month]) {
-      trends[month] = { total: 0, count: 0 };
-    }
-    trends[month].total += entry.volumeProduksi || entry.harga;
-    trends[month].count++;
-  });
+function isCuacaIdeal(dataCuaca, dataSensor, month) {
+  // Mengecek data prakiraan cuaca dan data sensor
+  const cuaca = dataCuaca[month];
+  const sensor = dataSensor[month];
 
-  const trendValues = {};
-  for (let month in trends) {
-    trendValues[month] = trends[month].total / trends[month].count;
-  }
+  // Contoh parameter cuaca ideal: tidak hujan lebat, suhu dan kelembapan ideal
+  const hujanLebat = cuaca.hujan > 50 || sensor.hujan > 50;
+  const suhuIdeal = cuaca.suhu >= 20 && cuaca.suhu <= 30;
+  const kelembapanIdeal = cuaca.kelembapan >= 60 && cuaca.kelembapan <= 80;
 
-  return trendValues;
+  return !hujanLebat && suhuIdeal && kelembapanIdeal;
 }
 
-function analisisCuaca(dataCuaca, plant) {
-  // Analisis kondisi cuaca optimal berdasarkan data prakiraan cuaca
-  const optimalMonths = [];
-  dataCuaca.forEach(entry => {
-    const month = new Date(entry.date).getMonth() + 1;
-    if (isCuacaOptimal(entry, plant)) {
-      optimalMonths.push(month);
-    }
-  });
-  return optimalMonths;
-}
+// Contoh penggunaan:
+const dataCuaca = { /* data prakiraan cuaca untuk 2024 */ };
+const dataSensor = { /* data sensor dari lahan */ };
+const dataProduksi2023 = [
+  // Data produksi untuk 2023
+  { date: '2023-01-01', volumeProduksi: 100, tanaman: 'Bawang Merah' },
+  // ...
+];
+const dataHarga2023 = [
+  // Data harga untuk 2023
+  { date: '2023-01-01', harga: 5000, tanaman: 'Bawang Merah' },
+  // ...
+];
+const dataProduksi2024 = [
+  // Data produksi untuk 2024 hingga sekarang
+  { date: '2024-01-01', volumeProduksi: 110, tanaman: 'Bawang Merah' },
+  // ...
+];
+const dataHarga2024 = [
+  // Data harga untuk 2024 hingga sekarang
+  { date: '2024-01-01', harga: 5200, tanaman: 'Bawang Merah' },
+  // ...
+];
 
-function isCuacaOptimal(entry, plant) {
-  // Logika untuk menentukan apakah cuaca optimal untuk penanaman
-  // Sesuaikan dengan kebutuhan tanaman
-  return entry.suhu >= 20 && entry.suhu <= 30 && entry.curahHujan <= 100;
-}
+const rekomendasi = rekomendasiWaktuTanam(dataCuaca, dataSensor, dataProduksi2023, dataHarga2023, dataProduksi2024, dataHarga2024);
+console.log(rekomendasi);
 
-function analisisSensor(dataSensor, plant) {
-  // Analisis data sensor di lahan untuk menentukan kondisi optimal
-  const optimalMonths = [];
-  dataSensor.forEach(entry => {
-    const month = new Date(entry.date).getMonth() + 1;
-    if (isSensorOptimal(entry, plant)) {
-      optimalMonths.push(month);
-    }
-  });
-  return optimalMonths;
-}
-
-function isSensorOptimal(entry, plant) {
-  // Logika untuk menentukan apakah kondisi sensor optimal untuk penanaman
-  // Sesuaikan dengan kebutuhan tanaman
-  return entry.kadarAir >= 30 && entry.kadarAir <= 50 && entry.kelembapan >= 60 && entry.kelembapan <= 80;
-}
-
-function evaluasiBulanTerbaik(kondisiCuacaOptimal, kondisiSensorOptimal, trenProduksi, trenHarga, rataRataProduksi, rataRataHarga) {
-  // Evaluasi bulan terbaik berdasarkan analisis data yang ada
-  let bestMonth = null;
-  let bestScore = -Infinity;
-
-  for (let month = 1; month <= 12; month++) {
-    let score = 0;
-
-    if (kondisiCuacaOptimal.includes(month)) score += 10;
-    if (kondisiSensorOptimal.includes(month)) score += 10;
-    if (trenProduksi[month] > rataRataProduksi[month]) score += 5;
-    if (trenHarga[month] > rataRataHarga[month]) score += 5;
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestMonth = month;
-    }
-  }
-
-  return bestMonth;
-}
-
-// Panggil fungsi untuk mendapatkan rekomendasi
-rekomendasiWaktuTanam().then(rekomendasi => {
-  console.log('Rekomendasi Waktu Tanam:', rekomendasi);
-});
