@@ -49,6 +49,20 @@ function avgHargaJual(tanaman) {
     }
 };
 
+const dataProduksi2024 = async (req, res) => {
+    const data = await DataPasar.findAll({
+      attributes: ['date', 'volumeProduksi'],
+      where: {
+        tanaman: 'Bawang Merah',
+        date: {
+          [Op.between]: [new Date(2024, 0, 1), new Date(2024, 12, 0)]
+        }
+      }
+    });
+    const datas = JSON.parse(data);
+    return res.status(200).json(datas);
+  }
+
 // Endpoint 1: Get Latest Data for Each Plant with Volume Penjualan in the Latest Month
 const getLatestVolume = async (req, res) => {
     try {
@@ -207,4 +221,4 @@ const getRecommendation = async (req, res) => {
 };
 
 
-module.exports = { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, isRecommendedToPlant, getRecommendation };
+module.exports = { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, isRecommendedToPlant, getRecommendation, dataProduksi2024 };

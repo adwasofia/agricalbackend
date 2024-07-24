@@ -1,4 +1,4 @@
-const nodeCron = require('node-cron');
+const cron = require('node-cron');
 
 const express = require('express');
 const { startdb } = require('./config/database');
@@ -20,6 +20,8 @@ app.listen(process.env.PORT, (error) => {
         console.log(`Server berjalan di port ${process.env.PORT}`);
     }
 });
+
+// cron.schedule('0 12 */2 * *', generateTargetReports)
 
 // authentication endpoint
 app.get("/auth-endpoint", authenticateJWT, (request, response) => {

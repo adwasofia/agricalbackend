@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 const apiKey = process.env.APIKEY_ACCUWEATHER;
 const oneHourlyApiUrl = 'http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/';
 const twelveHourlyApiUrl = 'http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/';
+const fiveDaysApiUrl = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/';
 //const locationKey = 3454195;
 
 // Append the API key as a query parameter to the URL
@@ -21,6 +22,16 @@ const fetchData = async (apiUrl, locationKey, apiKey) => {
     return data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+// Fetch 5 daily forecasts
+const fetchFiveDailyForecasts = async (locationKey) => {
+  try {
+    const data = await fetchData(fiveDaysApiUrl, locationKey, apiKey);
+    return data
+  } catch (error) {
+    return(error.message)
   }
 };
 
@@ -44,4 +55,4 @@ const fetchTwelveHourlyData = async (locationKey) => {
   }
 };
 
-module.exports = { fetchData, fetchOneHourlyData, fetchTwelveHourlyData };
+module.exports = { fetchData, fetchOneHourlyData, fetchTwelveHourlyData, fetchFiveDailyForecasts };

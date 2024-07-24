@@ -6,8 +6,9 @@ const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeathe
 const { getAllKegiatan, insertKegiatan, updateKegiatan, deleteKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
 const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require('../controller/KondisiLahan');
-const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation } = require('../controller/DataPasar');
+const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation, dataProduksi2024 } = require('../controller/DataPasar');
 const { createIrrigationSchedule, getAllIrrigationSchedule, getOneIrrigationSchedule, updateIrrigationSchedule, deleteIrrigationSchedule } = require('../controller/IrrigationSchedule');
+const { insertFiveDailyForecasts } = require('../controller/DailyForecast'); 
 
 const router = express.Router();
 const middle = express.urlencoded({ extended: false });
@@ -71,6 +72,7 @@ router.get('/highest-harga-jual-plant-latest-month', getHighestPrice);
 router.get('/avgvolumeproduksi', avgVolumeProduksi);
 router.get('/avghargajual', avgHargaJual);
 router.get('/recommendation', getRecommendation);
+router.get('/daprok', dataProduksi2024);
 
 // Routes untuk jadwal irigasi
 router.post('/irrigation-schedule', createIrrigationSchedule);
@@ -78,5 +80,8 @@ router.get('/irrigation-schedules', getAllIrrigationSchedule);
 router.get('/irrigation-schedule/:id', getOneIrrigationSchedule);
 router.put('/irrigation-schedule/:id', updateIrrigationSchedule);
 router.delete('/irrigation-schedule/:id', deleteIrrigationSchedule);
+
+// Routes untuk daily forecasts
+router.get('/insertdaily/:locationKey', insertFiveDailyForecasts);
 
 module.exports = { router };
