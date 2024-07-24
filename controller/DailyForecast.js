@@ -1,24 +1,31 @@
 const { Sequelize, Op } = require('sequelize');
-const DailyForecast = require('../models/dailyForecastModel');
+const { DailyForecast } = require('../models/dailyForecastModel');
 const { fetchFiveDailyForecasts } = require('../apiaccuweather');
 
-const insertFiveDailyForecasts = async (locationKey, res) => {
+const insertFiveDailyForecasts = async (req, res) => {
+    const locationKey = req.params.locationKey;
     try {
         const fetchedData = await fetchFiveDailyForecasts(locationKey);
 
-        const transformedDatas = fetchedData.map(data => ({
-            dateTime: new Date(data.DailyForecasts.Date),
+        console.log('Fetched Data:', fetchedData);
+
+        if (!fetchedData || !fetchedData.DailyForecasts || !Array.isArray(fetchedData.DailyForecasts)) {
+            throw new Error('Invalid data format');
+        }
+
+        const transformedDatas = fetchedData.DailyForecasts.map(data => ({
+            dateTime: new Date(data.Date),
             locationKey: locationKey,
-            dayWeatherIcon: data.DailyForecasts.Day.Icon,
-            nightWeatherIcon: data.DailyForecasts.Night.Icon,
-            dayIconPhrase: data.DailyForecasts.Day.IconPhrase,
-            nightIconPhrase: data.DailyForecasts.Night.IconPhrase,
-            dayHasPrecipitation: data.DailyForecasts.Day.HasPrecipitation,
-            nightHasPrecipitation: data.DailyForecasts.Night.HasPrecipitation,
-            minTemperatureValue: data.DailyForecasts.Temperature.Minimum.Value,
-            maxTemperatureValue: data.DailyForecasts.Temperature.Maximum.Value,
-            temperatureUnit: data.DailyForecasts.Temperature.Minimum.Unit,
-            temperatureUnitType: data.DailyForecasts.Temperature.Minimum.UnitType
+            dayWeatherIcon: data.Day.Icon,
+            nightWeatherIcon: data.Night.Icon,
+            dayIconPhrase: data.Day.IconPhrase,
+            nightIconPhrase: data.Night.IconPhrase,
+            dayHasPrecipitation: data.Day.HasPrecipitation,
+            nightHasPrecipitation: data.Night.HasPrecipitation,
+            minTemperatureValue: data.Temperature.Minimum.Value,
+            maxTemperatureValue: data.Temperature.Maximum.Value,
+            temperatureUnit: data.Temperature.Minimum.Unit,
+            temperatureUnitType: data.Temperature.Minimum.UnitType
         }));
 
         transformedDatas.forEach(async transformedData => {
@@ -31,7 +38,7 @@ const insertFiveDailyForecasts = async (locationKey, res) => {
         const newForecasts = await DailyForecast.bulkCreate(transformedDatas);
 
         res.status(200).json({
-            message: "Lime daily forecasts terbaru telah ditambahkan.",
+            message: "Lima daily forecasts terbaru telah ditambahkan.",
             details: transformedDatas
         });
     } catch (error) {
