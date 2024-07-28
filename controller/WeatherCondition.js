@@ -60,7 +60,10 @@ const getLatestWeatherCondition = async (req, res) => {
 
         res.json(latestweathercondition);
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            message: "Internal server error",
+            details: error.message
+        });
     }
 };
 
