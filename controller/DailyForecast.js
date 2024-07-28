@@ -1,9 +1,11 @@
 const { Sequelize, Op } = require('sequelize');
+const { db } = require('../config/database');
 const { DailyForecast } = require('../models/dailyForecastModel');
 const { fetchFiveDailyForecasts } = require('../apiaccuweather');
 
 const insertFiveDailyForecasts = async (req, res) => {
     const locationKey = req.params.locationKey;
+    const transaction = await db.transaction();
     try {
         const fetchedData = await fetchFiveDailyForecasts(locationKey);
 
@@ -28,20 +30,20 @@ const insertFiveDailyForecasts = async (req, res) => {
             temperatureUnitType: data.Temperature.Minimum.UnitType
         }));
 
-        transformedDatas.forEach(async transformedData => {
-            const recordExists = await DailyForecast.findOne({ where: { dateTime: transformedData.dateTime } });
-            if (recordExists) {
-                await recordExists.destroy();
-            }
-        });
+        // Using upsert to handle insertion and updating of existing records
+        for (const transformedData of transformedDatas) {
+            await DailyForecast.upsert(transformedData, { transaction });
+        }
 
-        const newForecasts = await DailyForecast.bulkCreate(transformedDatas);
+        await transaction.commit();
 
         res.status(200).json({
             message: "Lima daily forecasts terbaru telah ditambahkan.",
             details: transformedDatas
         });
     } catch (error) {
+        await transaction.rollback();
+        console.error('Error inserting daily forecasts:', error);
         res.status(500).json({
             message: "Internal server error.",
             details: error.message
