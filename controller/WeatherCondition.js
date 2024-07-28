@@ -82,10 +82,10 @@ const get12HoursForecasts = async (req, res) => {
             order: [['dateTime', 'ASC']] // Order by dateTime in ascending order
         });
 
-        alllocationkeys.forEach(location => {
-            //console.log(location.locationkey);
-            insertTwelveHourlyWeatherCondition(location.locationkey);
-        });
+        // alllocationkeys.forEach(location => {
+        //     //console.log(location.locationkey);
+        //     insertTwelveHourlyWeatherCondition(location.locationkey);
+        // });
 
         forecasts.forEach(data => {
             data.dateTime.setHours(data.dateTime.getHours() + 7)
