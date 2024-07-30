@@ -52,8 +52,7 @@ if (!username || !jeniskegiatan || !namakegiatan || !tanggal) {
 };
 
 const updateKegiatan = async (req, res) => {
-    const { username, jeniskegiatan, namakegiatan, catatan, tanggal} = req.body;
-    if (!username || !req.params.id) {
+    if (!req.body.username || !req.params.id) {
         return res.status(404).json({message: "Username and ID Kegiatan are required."});
     }
     const kalender = await Kalender.findByPk(req.params.id);
@@ -61,10 +60,11 @@ const updateKegiatan = async (req, res) => {
         return res.status(404).json({message: "Kegiatan not found."});
     }
     try {
-        kalender.jeniskegiatan = jeniskegiatan;
-        kalender.namakegiatanm = namakegiatan;
-        kalender.catatan = catatan;
-        kalender.tanggal = tanggal;
+        kalender.username = (req.body.username || kalender.username);
+        kalender.jeniskegiatan = (req.body.jeniskegiatan || kalender.jeniskegiatan);
+        kalender.namakegiatan = (req.body.namakegiatan || kalender.namakegiatan);
+        kalender.catatan = (req.body.catatan || kalender.catatan);
+        kalender.tanggal = (req.body.tanggal || kalender.tanggal);
         await kalender.save();
         return res.status(200).json({
             message: "Satu kegiatan telah diperbarui.",
