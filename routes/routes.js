@@ -83,7 +83,7 @@ router.get('/daprok', dataProduksi2024);
 router.post('/irrigation-schedule', createIrrigationSchedule);
 router.get('/irrigation-schedules', getAllIrrigationSchedule);
 router.get('/irrigation-schedule/:id', getOneIrrigationSchedule);
-router.get('/irrigation-schedule/:username', getOneIrrigationSchedule);
+router.get('/irrigation-schedule/:username', getIrrigationScheduleByUsername);
 router.put('/irrigation-schedule/:id', updateIrrigationSchedule);
 router.delete('/irrigation-schedule/:id', deleteIrrigationSchedule);
 
