@@ -7,7 +7,7 @@ const { getAllKegiatan, insertKegiatan, updateKegiatan, deleteKegiatan } = requi
 const { authenticateJWT } = require('../middleware/tokenVerification');
 const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require('../controller/KondisiLahan');
 const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation, dataProduksi2024 } = require('../controller/DataPasar');
-const { createIrrigationSchedule, getAllIrrigationSchedule, getOneIrrigationSchedule, updateIrrigationSchedule, deleteIrrigationSchedule } = require('../controller/IrrigationSchedule');
+const { createIrrigationSchedule, getAllIrrigationSchedule, getOneIrrigationSchedule, updateIrrigationSchedule, deleteIrrigationSchedule, getIrrigationScheduleByUsername } = require('../controller/IrrigationSchedule');
 const { insertFiveDailyForecasts } = require('../controller/DailyForecast'); 
 const { monthlyRecommendation, every3daysRecommendation } = require('../rekomendasi');
 
@@ -83,6 +83,7 @@ router.get('/daprok', dataProduksi2024);
 router.post('/irrigation-schedule', createIrrigationSchedule);
 router.get('/irrigation-schedules', getAllIrrigationSchedule);
 router.get('/irrigation-schedule/:id', getOneIrrigationSchedule);
+router.get('/irrigation-schedule/:username', getOneIrrigationSchedule);
 router.put('/irrigation-schedule/:id', updateIrrigationSchedule);
 router.delete('/irrigation-schedule/:id', deleteIrrigationSchedule);
 
