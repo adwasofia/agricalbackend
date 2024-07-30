@@ -19,18 +19,27 @@ const getAllKegiatan = async (req, res) => {
 };
 
 const insertKegiatan = async (req, res) => {
-    const { username, jeniskegiatan, namakegiatan, catatan, tanggal } = req.body;
-if (!username || !jeniskegiatan || !namakegiatan || !catatan || !tanggal) {
+    const { username, jeniskegiatan, namakegiatan, tanggal } = req.body;
+if (!username || !jeniskegiatan || !namakegiatan || !tanggal) {
         return res.status(404).json({message: "Username, Jenis Kegiatan, Nama Kegiatan, Catatan, dan Tanggal are required."});
     }
     try {
-        const newkegiatan = await Kalender.create({
-            username: username,
-            jeniskegiatan: jeniskegiatan,
-            namakegiatan: namakegiatan,
-            catatan: catatan,
-            tanggal: tanggal
-        });
+        if (req.body.catatan) {
+            const newkegiatan = await Kalender.create({
+                username: username,
+                jeniskegiatan: jeniskegiatan,
+                namakegiatan: namakegiatan,
+                catatan: req.body.catatan,
+                tanggal: tanggal
+            });
+        } else {
+            const newkegiatan = await Kalender.create({
+                username: username,
+                jeniskegiatan: jeniskegiatan,
+                namakegiatan: namakegiatan,
+                tanggal: tanggal
+            });
+        }
         return res.status(200).json({
             message: "Satu kegiatan baru telah ditambahkan.",
             details: newkegiatan
