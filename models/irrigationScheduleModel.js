@@ -24,6 +24,14 @@ const IrrigationSchedule = db.define('irrigationschedule', {
     waterDebit: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.ENUM('Belum Selesai', 'Selesai'),
+        allowNull: false
     }
 }, {
     timestamps: false,
