@@ -3,8 +3,8 @@ const IrrigationSchedule = require('../models/irrigationScheduleModel');
 
 const createIrrigationSchedule = async (req, res) => {
     try {
-        const { date, time, title, waterDebit, username } = req.body;
-        const schedule = await IrrigationSchedule.create({ date, time, title, waterDebit, username });
+        const { date, time, title, waterDebit, username, status } = req.body;
+        const schedule = await IrrigationSchedule.create({ date, time, title, waterDebit, username, status });
         return res.status(200).json({
             message: `New irrigation schedule is successfully added!`,
             details: schedule
