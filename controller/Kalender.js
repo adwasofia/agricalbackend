@@ -41,8 +41,7 @@ if (!username || !jeniskegiatan || !namakegiatan || !tanggal) {
             });
         }
         return res.status(200).json({
-            message: "Satu kegiatan baru telah ditambahkan.",
-            details: newkegiatan
+            message: "Satu kegiatan baru telah ditambahkan."
         });
     } catch (error) {
         return res.status(500).json({
