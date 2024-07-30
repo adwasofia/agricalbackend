@@ -9,7 +9,7 @@ const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require
 const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation, dataProduksi2024 } = require('../controller/DataPasar');
 const { createIrrigationSchedule, getAllIrrigationSchedule, getOneIrrigationSchedule, updateIrrigationSchedule, deleteIrrigationSchedule, getIrrigationScheduleByUsername } = require('../controller/IrrigationSchedule');
 const { insertFiveDailyForecasts } = require('../controller/DailyForecast'); 
-const { monthlyRecommendation, every3daysRecommendation } = require('../rekomendasi');
+const { monthlyRecommendation, every3daysRecommendation, dailyRecommendation } = require('../rekomendasi');
 
 const router = express.Router();
 const middle = express.urlencoded({ extended: false });
@@ -66,6 +66,7 @@ router.delete('/deletekegiatan/:id', deleteKegiatan);
 // Route untuk rekomendasi
 router.get('/monthlyrecommendation', monthlyRecommendation);
 router.get('/every3daysrecommendation/:locationKey', every3daysRecommendation);
+router.get('/dailyrecommendation/:locationKey', dailyRecommendation);
 
 // Route untuk Lokasi Lahan
 // router.get('/alllocationkey', getAllLocationKey);

@@ -99,13 +99,15 @@ const every3daysRecommendation = async (req, res) => {
       });
 
       const threeDaysLater = new Date(currentDate);
-      threeDaysLater.setDate(currentDate.getDate() + 2);
+      const oneDayEarlier  = new Date(currentDate);
+      threeDaysLater.setDate(currentDate.getDate() + 3);
+      oneDayEarlier.setDate(currentDate.getDate() - 1)
 
       const forecasts = await DailyForecast.findAll({
         where: {
           locationKey: locationKey,
           dateTime: {
-            [Op.between]: [currentDate, threeDaysLater]
+            [Op.between]: [oneDayEarlier, threeDaysLater]
           }
         }
       });
@@ -148,7 +150,6 @@ const dailyRecommendation = async (req, res) => {
   const currentDate = new Date();
   console.log(currentDate);
   const plants = ['Bawang Merah', 'Cabai Besar', 'Cabai Keriting', 'Cabai Rawit'];
-  const rekomendasi = {};
 
   try {
     const locationKey = req.params.locationKey;
@@ -173,16 +174,16 @@ const dailyRecommendation = async (req, res) => {
         }
       });
 
-      // const threeDaysBefore = new Date(currentDate);
-      // threeDaysBefore.setDate(currentDate.getDate() - 3);
       const threeDaysLater = new Date(currentDate);
-      threeDaysLater.setDate(currentDate.getDate() + 2);
+      const oneDayEarlier  = new Date(currentDate);
+      threeDaysLater.setDate(currentDate.getDate() + 3);
+      oneDayEarlier.setDate(currentDate.getDate() - 1)
 
       const forecasts = await DailyForecast.findAll({
         where: {
           locationKey: locationKey,
           dateTime: {
-            [Op.between]: [currentDate, threeDaysLater]
+            [Op.between]: [oneDayEarlier, threeDaysLater]
           }
         }
       });
@@ -194,6 +195,8 @@ const dailyRecommendation = async (req, res) => {
         order: [['date', 'DESC']],
         limit: 3
       });
+      
+      console.log(`This year pasar: ${thisYearPasar}`);
 
       const sensorTerkini = await KondisiLahan.findOne({
         where: {
@@ -203,6 +206,8 @@ const dailyRecommendation = async (req, res) => {
             ['date', 'DESC']
         ]
       });
+
+      console.log(`Sensor terkini: ${sensorTerkini}`);
   
       const averageProduction2023 = hitungRataRata(lastYearProduction, 'volumeProduksi');
       const averagePrice2023 = hitungRataRata(lastYearPrice, 'hargaJual');
@@ -211,6 +216,9 @@ const dailyRecommendation = async (req, res) => {
       const forecastsIdeal = isForecastsIdeal(forecasts);
       const pasarIdeal = isPasarIdeal(thisYearPasar);
       const sensorIdeal = isSensorIdeal(sensorTerkini);
+      console.log(`Forecasts ideal: ${forecastsIdeal}`);
+      console.log(`Pasar 2024 ideal: ${pasarIdeal}`);
+      console.log(`Sensor ideal: ${sensorIdeal}`);
   
       const month = currentDate.getMonth();
       const panenMonth = (month + 3) % 12 || 12;
@@ -230,7 +238,7 @@ const dailyRecommendation = async (req, res) => {
       }
     }
     res.status(200).json({
-      message: "Adding every-3-days-recommendation succeed!"
+      message: "Adding daily recommendation succeed!"
     });
   } catch (error) {
       res.status(500).json({
@@ -262,6 +270,7 @@ function isForecastsIdeal (data) {
     let nightHasPrecipitation = entry['nightHasPrecipitation'];
     let minTemperatureValue = Math.round((parseFloat(entry['minTemperatureValue']) - 32) * 5 / 9);
     let maxTemperatureValue = Math.round((parseFloat(entry['maxTemperatureValue']) - 32) * 5 / 9);
+    console.log(entry['dateTime']);
     console.log(dayHasPrecipitation);
     console.log(nightHasPrecipitation);
     console.log(minTemperatureValue);
@@ -270,26 +279,31 @@ function isForecastsIdeal (data) {
       result = false;
     }
   });
-  console.log(`Result = ${result}`);
+  console.log(`Result isForecastsIdeal = ${result}`);
   return result;
 }
 
 function isPasarIdeal (data) {
   let result = true;
-  for (let i = data.length-1; i > 0; i--) {
-    if ((data[i]['volumeProduksi'] > data[i-1]['volumeProduksi']) || (data[i]['hargaJual'] < data[i-1]['hargaJual'])) {
+  for (let i = 0; i < 2; i++) {
+    console.log(`Date = ${data[i]['date']}, Volume Produksi = ${data[i]['volumeProduksi']}, Harga Jual = ${data[i]['hargaJual']}`);
+    if ((data[i]['volumeProduksi'] > data[i+1]['volumeProduksi']) || (data[i]['hargaJual'] < data[i+1]['hargaJual'])) {
       result = false;
     }
   }
-  console.log(`Result = ${result}`);
+  console.log(`Date = ${data[2]['date']}, Volume Produksi = ${data[2]['volumeProduksi']}, Harga Jual = ${data[2]['hargaJual']}`);
+  console.log(`Result isPasarIdeal = ${result}`);
   return result;
 }
 
 function isSensorIdeal (data) {
   let result = true;
+  console.log(`Rain amount = ${data['rainAmount']}, Temperature = ${data['temperature']}, Moisture = ${data['moisture']}`);
   if ((data['rainAmount'] > 0) || (data['temperature'] < 18) || (data['temperature'] > 30) || (data['moisture'] < 60) || (data['moisture'] > 80)) {
     result = false;
   }
+  console.log(`Result isSensorIdeal = ${result}`);
+  return result;
 }
 
 function hitungRataRataBulanan(data, field) {
@@ -359,4 +373,4 @@ function hitungRataRataBulanan(data, field) {
 // const ratarata = rekomendasiWaktuTanam();
 // console.log(ratarata);
 
-module.exports = { monthlyRecommendation, every3daysRecommendation };
+module.exports = { monthlyRecommendation, every3daysRecommendation, dailyRecommendation };
