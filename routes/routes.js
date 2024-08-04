@@ -5,7 +5,7 @@ const { getAllLokasiLahan, getAllLocationKey, getOneLocationKey } = require('../
 const { getAllWeatherCondition, getLatestWeatherCondition, insertOneHourlyWeatherCondition, insertTwelveHourlyWeatherCondition, updateWeatherForecast, get12HoursForecasts } = require('../controller/WeatherCondition'); 
 const { getAllKegiatan, insertKegiatan, updateKegiatan, deleteKegiatan } = require('../controller/Kalender');
 const { authenticateJWT } = require('../middleware/tokenVerification');
-const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff } = require('../controller/KondisiLahan');
+const { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff, updateIrrigationStatus } = require('../controller/KondisiLahan');
 const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, avgHargaJual, getRecommendation, dataProduksi2024 } = require('../controller/DataPasar');
 const { createIrrigationSchedule, getAllIrrigationSchedule, getOneIrrigationSchedule, updateIrrigationSchedule, deleteIrrigationSchedule, getIrrigationScheduleByUsername } = require('../controller/IrrigationSchedule');
 const { insertFiveDailyForecasts } = require('../controller/DailyForecast'); 
@@ -46,6 +46,7 @@ router.post('/getonelocationkey', getOneLocationKey);
 router.get('/latestkondisilahan', getLatestKondisiLahan)
 router.post('/turn-on-irigasi', sendInstructionOn)
 router.post('/turn-off-irigasi', sendInstructionOff)
+router.post('/statusirigasi', updateIrrigationStatus);
 
 // Route untuk weathercondition ()
 // router.get('/allweathercondition', getAllWeatherCondition);

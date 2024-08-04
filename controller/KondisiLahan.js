@@ -101,6 +101,54 @@ const sendInstructionOff = async (req, res) => {
     }
 };
 
+const updateIrrigationStatus = async (req, res) => {
+    const newstatus = req.body.statusirigasi;
+    if (!newstatus) {
+        return res.status(400).json({
+            message: "New irrigation status is required!"
+        });
+    }
+    const kondisilahan = await KondisiLahan.findOne({
+        order: [
+            ['date', 'DESC'],
+            ['time', 'DESC']
+        ]
+    });
+    if (!kondisilahan) {
+        return res.status(404).json({
+            message: "Latest kondisi lahan is not found, cannot update irrigation status."
+        });
+    }
+    try {
+        kondisilahan.date = kondisilahan.date,
+        kondisilahan.time = kondisilahan.time,
+        kondisilahan.voltage = kondisilahan.voltage,
+        kondisilahan.lux = kondisilahan.lux,
+        kondisilahan.solarRadiation = kondisilahan.solarRadiation,
+        kondisilahan.humidity = kondisilahan.humidity,
+        kondisilahan.temperature = kondisilahan.temperature,
+        kondisilahan.pressure = kondisilahan.pressure,
+        kondisilahan.windSpeed = kondisilahan.windSpeed,
+        kondisilahan.windDirection = kondisilahan.windDirection,
+        kondisilahan.windGust = kondisilahan.windGust,
+        kondisilahan.rainAmount = kondisilahan.rainAmount,
+        kondisilahan.statusIrigasi = newstatus,
+        kondisilahan.waterLevel = kondisilahan.waterLevel,
+        kondisilahan.moisture = kondisilahan.moisture,
+        kondisilahan.isEmergency = kondisilahan.isEmergency
+        await kondisilahan.save();
+        return res.status(200).json({
+            message: "Status irigasi telah diperbarui.",
+            details: kondisilahan
+        });
+    } catch {
+        return res.status(500).json({
+            message: "Internal server error",
+            details: error.message
+        });
+    }
+}
+
 // Call these functions when the respective buttons are pressed
 // For turning on irrigation
 // sendInstruction('TURN_ON_IRRIGATION');
@@ -109,4 +157,4 @@ const sendInstructionOff = async (req, res) => {
 // sendInstruction('TURN_ON_WEATHER_MONITORING');
 
 
-module.exports = { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff };
+module.exports = { getLatestKondisiLahan, sendInstructionOn, sendInstructionOff, updateIrrigationStatus };
