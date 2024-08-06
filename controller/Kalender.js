@@ -85,8 +85,8 @@ const deleteKegiatan = async (req, res) => {
     }
     try {
         const kegiatan = await Kalender.findByPk(req.params.id);
-        if (schedule) {
-            await schedule.destroy();
+        if (kegiatan) {
+            await kegiatan.destroy();
             return res.status(200).json({ message: `Kegiatan with the id=${req.params.id} is successfully deleted.` });
         } else {
             return res.status(404).json({ error: 'Kegiatan not found' });
