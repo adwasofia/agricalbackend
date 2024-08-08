@@ -26,6 +26,10 @@ const Kalender = db.define('kalender', {
     tanggal: {
         type: DataTypes.DATEONLY,
         allowNull: false
+    },
+    status: {
+        type: DataTypes.ENUM('Belum Selesai', 'Selesai'),
+        allowNull: false
     }
 }, {
     freezeTableName: true,

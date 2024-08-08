@@ -30,14 +30,16 @@ if (!username || !jeniskegiatan || !namakegiatan || !tanggal) {
                 jeniskegiatan: jeniskegiatan,
                 namakegiatan: namakegiatan,
                 catatan: req.body.catatan,
-                tanggal: tanggal
+                tanggal: tanggal,
+                status: 'Belum Selesai'
             });
         } else {
             const newkegiatan = await Kalender.create({
                 username: username,
                 jeniskegiatan: jeniskegiatan,
                 namakegiatan: namakegiatan,
-                tanggal: tanggal
+                tanggal: tanggal,
+                status: 'Belum Selesai'
             });
         }
         return res.status(200).json({
@@ -65,6 +67,7 @@ const updateKegiatan = async (req, res) => {
         kalender.namakegiatan = (req.body.namakegiatan || kalender.namakegiatan);
         kalender.catatan = (req.body.catatan || kalender.catatan);
         kalender.tanggal = (req.body.tanggal || kalender.tanggal);
+        kalender.status = (req.body.status || kalender.status)
         await kalender.save();
         return res.status(200).json({
             message: "Satu kegiatan telah diperbarui.",
