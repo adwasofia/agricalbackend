@@ -94,10 +94,10 @@ const getLatestVolume = async (req, res) => {
 
         const showedData = {tanaman: formattedData}
 
-        res.json(showedData);
+        return res.json(showedData);
     } catch (error) {
         console.error('Error fetching data:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
@@ -123,10 +123,10 @@ const getHighestVolume = async (req, res) => {
             tanaman: highestVolumePlant.tanaman,
             volumePenjualan: Math.round(highestVolumePlant.volumeProduksi)
         };
-        res.json(formattedData);
+        return res.json(formattedData);
     } catch (error) {
         console.error('Error fetching data:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
@@ -152,11 +152,11 @@ const getHighestPrice = async (req, res) => {
             tanaman: highestHargaJualPlant.tanaman,
             hargaJual: Math.round(highestHargaJualPlant.hargaJual)
         };
-        res.json(formattedData);
+        return res.json(formattedData);
         res.json(highestHargaJualPlant);
     } catch (error) {
         console.error('Error fetching data:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
