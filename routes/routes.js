@@ -10,6 +10,7 @@ const { getLatestVolume, getHighestVolume, getHighestPrice, avgVolumeProduksi, a
 const { createIrrigationSchedule, getAllIrrigationSchedule, getOneIrrigationSchedule, updateIrrigationSchedule, deleteIrrigationSchedule, getIrrigationScheduleByUsername } = require('../controller/IrrigationSchedule');
 const { insertFiveDailyForecasts } = require('../controller/DailyForecast'); 
 const { monthlyRecommendation, every3daysRecommendation, dailyRecommendation } = require('../rekomendasi');
+const { switchIrrigationStatus } = require('../controller/irrigationController');
 
 const router = express.Router();
 const middle = express.urlencoded({ extended: false });
@@ -43,10 +44,9 @@ router.post('/getonelocationkey', getOneLocationKey);
 // log out
 
 // Route untuk Kondisi Lahan
-router.get('/latestkondisilahan', getLatestKondisiLahan)
-router.post('/turn-on-irigasi', sendInstructionOn)
-router.post('/turn-off-irigasi', sendInstructionOff)
-router.post('/statusirigasi', updateIrrigationStatus);
+router.get('/latestkondisilahan', getLatestKondisiLahan);
+//router.post('/statusirigasi', updateIrrigationStatus);
+router.post('/irrigation-status/:status', switchIrrigationStatus);
 
 // Route untuk weathercondition ()
 // router.get('/allweathercondition', getAllWeatherCondition);
