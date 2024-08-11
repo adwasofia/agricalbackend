@@ -14,12 +14,14 @@ device.on('connect', function() {
 
 // Function to publish the irrigation status
 function setIrrigationStatus(status) {
-    const message = { message: status };
+    const message = {
+        "message": status
+    };
     device.publish('esp32/sub', JSON.stringify(message), function(err) {
         if (err) {
             console.log('Error publishing message:', err);
         } else {
-            console.log('Message published:', message);
+            console.log('Message published:', JSON.stringify(message));
         }
     });
 }
