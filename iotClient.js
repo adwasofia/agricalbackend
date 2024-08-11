@@ -1,11 +1,11 @@
 var awsIot = require('aws-iot-device-sdk');
 
 var device = awsIot.device({
-    keyPath: '0efd6ea83abb6d7fbcc1599e4133505465a555d172722f40ca1e9235fbdbcbc0-private.pem.key',
-    certPath: '0efd6ea83abb6d7fbcc1599e4133505465a555d172722f40ca1e9235fbdbcbc0-certificate.pem.crt',
+    keyPath: 'private_key.key',
+    certPath: 'device_certificate.crt',
     caPath: 'AmazonRootCA1 (1).pem',
-    clientId: 'test',
-    host: 'anmy0x4pxvlga-ats.iot.us-east-1.amazonaws.com'
+    clientId: 'AgriCal',
+    host: 'axgujjldmu0bz-ats.iot.ap-southeast-2.amazonaws.com'
 });
 
 device.on('connect', function() {
@@ -14,8 +14,8 @@ device.on('connect', function() {
 
 // Function to publish the irrigation status
 function setIrrigationStatus(status) {
-    const message = { status_irigasi: status };
-    device.publish('topic_2', JSON.stringify(message), function(err) {
+    const message = { message: status };
+    device.publish('esp32/sub', JSON.stringify(message), function(err) {
         if (err) {
             console.log('Error publishing message:', err);
         } else {

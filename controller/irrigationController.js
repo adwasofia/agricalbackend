@@ -46,13 +46,13 @@ const switchIrrigationStatus = async (req, res) => {
     }
     try {
         if (newstatus == "on") {
-            setIrrigationStatus("ON");
+            setIrrigationStatus(true);
             updateIrrigationStatus(true);
             return res.status(200).json({
                 message: "Irrigation status is successfully switched to ON!"
             });
         } else if (newstatus == "off") {
-            setIrrigationStatus("OFF");
+            setIrrigationStatus(false);
             updateIrrigationStatus(false);
             return res.status(200).json({
                 message: "Irrigation status is successfully switched to OFF!"
