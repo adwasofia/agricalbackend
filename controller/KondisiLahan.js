@@ -1,4 +1,5 @@
 const { KondisiLahan } = require('../models/kondisiLahanModel');
+const { setIrrigationStatus } = require("../iotClient");
 
 function determineWeatherPhrase(temperature, rainamount) {
     if (rainamount > 0) {
@@ -38,6 +39,12 @@ const getLatestKondisiLahan = async (req, res) => {
                 ['time', 'DESC']
             ]
         });
+        const newstatus = kondisilahan.statusIrigasi;
+        if (newstatus == true) {
+            setIrrigationStatus("ON");
+        } else if (newstatus == false) {
+            setIrrigationStatus("OFF");
+        }
         const latestkondisilahan = {
             date: kondisilahan.date,
             time: kondisilahan.time,
@@ -57,7 +64,7 @@ const getLatestKondisiLahan = async (req, res) => {
             moisture: kondisilahan.moisture,
             isemergency: kondisilahan.isEmergency
         }
-        res.json(latestkondisilahan);
+        return res.json(latestkondisilahan);
     } catch (error) {
         console.log(error);
     }
