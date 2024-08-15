@@ -7,11 +7,11 @@ const axios = require("axios");
 const getUsers = async (req, res) => {
     try {
         const users = await Users.findAll({
-            attributes: ['firstname', 'lastName', 'username', 'email', 'password']
+            attributes: ['firstname', 'lastName', 'username', 'email', 'password', 'punyaAlat', 'lokasiLahan', 'tanaman']
         });
-        res.json(users);
+        return res.json(users);
     } catch (error) {
-        console.log(error);
+        return console.log(error);
     }
 };
 
